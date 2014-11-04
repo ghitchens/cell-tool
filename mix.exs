@@ -17,7 +17,7 @@ defmodule Box.Mixfile do
   defp deps, do: [
 		{ :exjsx, "~> 3.0.0" },
 		{:ibrowse, github: "cmullaparthi/ibrowse", tag: "v4.1.0"},
-		{:httpotion, "~> 0.2.0"}
+		{:httpotion, "~> 0.2.4"}
 	]
 
 end
