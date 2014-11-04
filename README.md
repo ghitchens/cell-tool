@@ -10,6 +10,7 @@ that's pretty useful, if you ask me.
 
 # Installation
 
+	mix deps.get
 	mix escript.build
 
 # Usage
