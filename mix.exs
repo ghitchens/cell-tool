@@ -1,11 +1,11 @@
-defmodule Box.Mixfile do
+defmodule CellTool.Mixfile do
 
   use Mix.Project
 
   def project do
-    [app: :box,
-     escript: [main_module: Box],
-     version: "0.0.1",
+    [app: :celltool,
+     escript: [main_module: Main, name: "cell", path: "/usr/local/bin/cell"],
+     version: "0.1.1",
      elixir: "~> 1.0",
      deps: deps]
   end
@@ -15,7 +15,7 @@ defmodule Box.Mixfile do
   ]
 
   defp deps, do: [
-		{ :exjsx, "~> 3.0.0" },
+		{:exjsx, "~> 3.0.0" },
 		{:ibrowse, github: "cmullaparthi/ibrowse", tag: "v4.1.0"},
 		{:httpotion, "~> 0.2.4"}
 	]
