@@ -3,7 +3,7 @@ defmodule Main do
   def main([]), do: main(["help"])
   def main(["help"]), do: Cmd.Help.run
 
-  def main(["norm", cspec]), do: Cmd.Normalize.run(cspec)
+  def main(["normal", cspec]), do: Cmd.Normalize.run(cspec)
   def main(["normalize", cspec]), do: Cmd.Normalize.run(cspec)
 
   def main(["discover"]), do: main(["discover", nil])

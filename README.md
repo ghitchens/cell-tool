@@ -1,7 +1,7 @@
 `CELL TOOL`
 ========
 
-A simple command line interface for managing echo cells.
+A simple command line interface for managing cells.
 
 # Installation
 
@@ -16,7 +16,7 @@ A simple command line interface for managing echo cells.
     cell watch [<cells>]        watch multicast debug log of one or more cells
     cell push <ware> <cells>    push specific 'ware to one or more cells    
     cell update <cells>         update firmware from repository
-    cell normalize <cells>      make provisional 'ware normal
+    cell normal[ize] <cells>    make provisional 'ware normal
                 
       <cells>  Specifies cell(s) to operate on, in one of the following formats:
 
