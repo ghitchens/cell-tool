@@ -15,9 +15,9 @@ defmodule Cmd.Discover do
         fw = svcs.firmware
         case fw.firmware_status do
           "normal" ->
-    				".#{n}\t#{Inet.ntoa(c.ip)}\t#{srd.serial_number}\t#{fw.device_id}\t#{fw.firmware_version}"
+    				".#{n}\t#{Inet.ntoa(c.ip)}\t#{srd.serial_number}\t#{srd.model}\t#{fw.version}"
           fw_status ->
-    				".#{n}\t#{Inet.ntoa(c.ip)}\t#{srd.serial_number}\t#{fw.device_id}\t#{fw.firmware_version} (#{fw_status})"
+    				".#{n}\t#{Inet.ntoa(c.ip)}\t#{srd.serial_number}\t#{fw.model}\t#{fw.version} (#{fw_status})"
         end
 			{:error, _x} ->
 				".#{n}\t#{Inet.ntoa(c.ip)}\t[unknown]\tmalfunctioning [server: #{c.server}]"
