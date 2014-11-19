@@ -15,7 +15,7 @@ defmodule Cmd.Push do
     IO.write "cell: #{n} -> "
 		resp = HTTPotion.put(url, ware, ["Content-Type": "application/x-firmware"])
 		case resp.status_code do
-			200 ->  IO.write "ok\n"
+			201 ->  IO.write "ok\n"
 			x ->    IO.write "UPDATE FAILED (ERROR #{x})\n"
 		end
   end
