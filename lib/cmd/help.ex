@@ -8,9 +8,10 @@ defmodule Cmd.Help do
   cell list [<cells>]         list found cells (alias for discover for now)
   cell discover [<cells>]     find cells using SSDP on the LAN
   cell watch [<cells>]        watch multicast debug log of one or more cells
-  cell push <ware> <cells>    push specific 'ware to one or more cells    
+  cell push <ware> <cells>    push specific firmware to one or more cells    
   cell update <cells>         update firmware from repository
-  cell normal[ize] <cells>    make provisional 'ware normal
+  cell normal[ize] <cells>    make provisional firmware normal
+  cell denormal[ize] <cells>  make normal firmwae provisional
                   
     <cells>  Specifies cell(s) to operate on, in one of the following formats:
   

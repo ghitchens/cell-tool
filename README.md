@@ -17,6 +17,7 @@ A simple command line interface for managing cells.
     cell push <ware> <cells>    push specific 'ware to one or more cells    
     cell update <cells>         update firmware from repository
     cell normal[ize] <cells>    make provisional 'ware normal
+    cell denormal[ize] <cells>  make normal ware 'provisional
                 
       <cells>  Specifies cell(s) to operate on, in one of the following formats:
 

@@ -12,7 +12,7 @@ defmodule Cmd.Discover do
     {_, _, _, n} = c.ip
 		case Jrtp.get_services(location) do
 			{:error, _x} ->
-				".#{n}\t#{Inet.ntoa(c.ip)}\t[unknown]\tmalfunctioning [server: #{c.server}]"
+				".#{n}\t#{Inet.ntoa(c.ip)}\tERROR:\t[server: #{c.server} location: #{location}]"
 			{:ok, svcs} ->
         case svcs.root.description do     
           description when is_bitstring(description) -> # v2

@@ -13,7 +13,7 @@ defmodule Cmd.Push do
     {_, _, _, n} = cell.ip
 		url = location<>"/sys/firmware/current"
     IO.write "cell: #{n} -> "
-		resp = HTTPotion.put(url, ware, ["Content-Type": "application/x-firmware"])
+		resp = HTTPotion.put(url, ware, ["Content-Type": "application/x-firmware"], timeout: 15000)
 		case resp.status_code do
 			201 ->  IO.write "ok\n"
 			x ->    IO.write "UPDATE FAILED (ERROR #{x})\n"

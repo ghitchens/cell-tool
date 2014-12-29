@@ -6,6 +6,9 @@ defmodule Main do
   def main(["normal", cspec]), do: Cmd.Normalize.run(cspec)
   def main(["normalize", cspec]), do: Cmd.Normalize.run(cspec)
 
+  def main(["denormal", cspec]), do: Cmd.Denormalize.run(cspec)
+  def main(["denormalize", cspec]), do: Cmd.Denormalize.run(cspec)
+
   def main(["discover"]), do: main(["discover", nil])
   def main(["discover", cspec]), do: Cmd.Discover.run(cspec)
 
