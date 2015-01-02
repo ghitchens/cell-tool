@@ -1,6 +1,7 @@
 
 defmodule Jrtp do
   
+  @doc "returns {:ok, services}]"
   def get_services(cell) do
     location = cell.location
 		full_url = Path.join(location, "services")

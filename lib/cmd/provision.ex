@@ -24,14 +24,15 @@ defmodule Cmd.Provision do
 
   defp provision(cell, app_id) do
 
-    services = Jrtp.get_services(cell)
-		{_, config} = Code.eval_file("#{app_id}.cfg", @provision_dir)
+    {:ok, services} = Jrtp.get_services(cell)
+		{_, config} = Code.eval_file("#{app_id}.exs", @provision_dir)
+    serial_number = services.root.serial_number
 
     # decide if activation/locking is required.  If so, call the custom
     # lock function defined in the configuration, passing the serial#
 	  case config[:activate] do
 			f when is_function(f) -> 
-				lock_blob = f.(services[:serial_number])
+				lock_blob = f.(serial_number)
         lock_cell(cell, lock_blob)
       _ -> nil  
     end
