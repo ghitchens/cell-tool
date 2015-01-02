@@ -8,8 +8,7 @@ defmodule Cmd.Discover do
   end
 
   defp fsr(c) do
-		location = c.location
-		case Jrtp.get_services(location) do
+		case Jrtp.get_services(c) do
 			{:error, x} ->
 				".#{c.name}\tError #{x} from #{inspect c}"
 			{:ok, svcs} ->
@@ -35,7 +34,7 @@ defmodule Cmd.Discover do
         case fs do
           "normal" ->
             "#{c.name}\t#{sn}\t#{model}\t#{fv}"
-          fw_status ->
+          _fw_status ->
             "#{c.name}\t#{sn}\t#{model}\t#{fv} (#{fs})"
         end
 		end

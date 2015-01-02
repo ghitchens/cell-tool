@@ -29,15 +29,16 @@ defmodule SsdpClient do
   defp merge_gathered(gathered, host, packet) do
     resp = decode_ssdp_packet(packet)
 		{usn, resp} = Dict.pop resp, :usn
-		resp = Dict.merge resp, %{ip: host}
+    {_,_,_,l} = host
+		resp = Dict.merge resp, %{ip: host, name: ".#{l}"}
     Dict.put gathered, usn, resp
   end
 
   # returns keys/values given an ssdp packet
   defp decode_ssdp_packet(packet) do
-    {[raw_http_line], raw_params} = String.split(packet, ["\r\n", "\n"]) |> Enum.split(1)
-    http_line = String.downcase(raw_http_line) |> String.strip
-    {[http_verb, full_uri], _rest} = String.split(http_line) |> Enum.split(2)
+    {[_raw_http_line], raw_params} = String.split(packet, ["\r\n", "\n"]) |> Enum.split(1)
+    #http_line = String.downcase(raw_http_line) |> String.strip
+    #{[http_verb, {full_uri], _rest} = String.split(http_line) |> Enum.split(2)
     mapped_params = Enum.map raw_params, fn(x) ->
       case String.split(x, ":", parts: 2) do
         [k, v] -> {String.to_atom(String.downcase(k)), String.strip(v)}

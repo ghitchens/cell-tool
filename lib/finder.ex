@@ -48,13 +48,11 @@ defmodule Finder do
   # decide if a cell meets the spec.  "all" and nil both match all
   # cells.  For now, only the last octet can be used otherwise
   defp meets_spec(cell, spec) do
-    {key, info} = cell
+    {_key, info} = cell
     case spec do
       "all" -> true
       nil -> true
-      str -> 
-        str == info.name
-      _ -> false
+      str -> (str == info.name)
     end
   end
 
