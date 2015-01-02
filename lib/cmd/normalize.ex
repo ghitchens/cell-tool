@@ -9,9 +9,8 @@ defmodule Cmd.Normalize do
   
   defp normalize(cell) do
 		location = cell.location
-    {_, _, _, n} = cell.ip
 		url = Path.join location, "/sys/firmware/current"
-    IO.write ".#{n} -> "
+    IO.write "#{cell.name} -> "
 		resp = HTTPotion.put(url, "{\"status\":\"normal\"}", ["Content-Type": "application/json"])
 		case resp.status_code do
 			200 ->  IO.write "ok\n"

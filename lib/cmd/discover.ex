@@ -3,16 +3,15 @@ defmodule Cmd.Discover do
   
   def run(spec, _opts \\ %{}) do
 		HTTPotion.start
-    Finder.apply spec, "NAME\tIP ADDRESS\tSERIAL#\t\tTYPE\tVERSION -",
+    Finder.apply spec, "NAME\tSERIAL#\t\tTYPE\tVERSION -",
       &(IO.write fsr(&1)<>"\n")
   end
 
   defp fsr(c) do
 		location = c.location
-    {_, _, _, n} = c.ip
 		case Jrtp.get_services(location) do
-			{:error, _x} ->
-				".#{n}\t#{Inet.ntoa(c.ip)}\tERROR:\t[server: #{c.server} location: #{location}]"
+			{:error, x} ->
+				".#{c.name}\tError #{x} from #{inspect c}"
 			{:ok, svcs} ->
         case svcs.root.description do     
           description when is_bitstring(description) -> # v2
@@ -35,9 +34,9 @@ defmodule Cmd.Discover do
         end
         case fs do
           "normal" ->
-            ".#{n}\t#{Inet.ntoa(c.ip)}\t#{sn}\t#{model}\t#{fv}"
+            "#{c.name}\t#{sn}\t#{model}\t#{fv}"
           fw_status ->
-            ".#{n}\t#{Inet.ntoa(c.ip)}\t#{sn}\t#{model}\t#{fv} (#{fs})"
+            "#{c.name}\t#{sn}\t#{model}\t#{fv} (#{fs})"
         end
 		end
   end

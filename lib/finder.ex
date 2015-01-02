@@ -6,7 +6,11 @@ defmodule Finder do
   then run func with each cell as param
   """
   def apply(cspec, title, func) do
-    cells = discovered(cspec)
+	  if :erlang.is_binary(cspec) and String.length(cspec) > 5 do
+			cells = make_static_cell(cspec)
+	  else
+	    cells = discovered(cspec)
+		end		
     case Enum.count(cells) do
       0 -> nil
 			n ->
@@ -17,6 +21,12 @@ defmodule Finder do
     end  
   end
 
+	# return a single cell with the specified location, because the user
+	# asked for a specific cell in ip:port form.
+	defp make_static_cell(cspec) do
+		%{ "remote": %{ location: "http://#{cspec}/nemo", name: cspec }}
+	end
+	
   def discovered(spec) do
 		cells = SsdpClient.discover |> spec(spec)
     n = Enum.count(cells)

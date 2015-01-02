@@ -26,3 +26,9 @@ A simple command line interface for managing cells.
       <ware>   Specifies firmware to install, in one of the following formats:
 
         build/test.fw           Path to firmware in the filesystem
+
+# Wishlist
+
+	cell alias <alias> <cell[s]>			Make an alias for one or more cells
+	cell static <cell> <ip>|clear			Set a static IP on a cell
+	
