@@ -5,6 +5,7 @@ defmodule Finder do
   then put title with number of cells
   then run func with each cell as param
   """
+
   def apply(cspec, title, func) do
 	  if :erlang.is_binary(cspec) and String.length(cspec) > 5 do
 			cells = make_static_cell(cspec)
@@ -52,8 +53,7 @@ defmodule Finder do
       "all" -> true
       nil -> true
       str -> 
-        {_, _, _, last_octet} = info.ip
-        ".#{last_octet}" == str
+        str == info.name
       _ -> false
     end
   end
