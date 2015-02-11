@@ -12,6 +12,7 @@ defmodule Cmd.Help do
   cell update <cells>         update firmware from repository
   cell normal[ize] <cells>    make provisional firmware normal
   cell denormal[ize] <cells>  make normal firmwae provisional
+  cell reboot <cells>         reboot a cell
                   
     <cells>  Specifies cell(s) to operate on, in one of the following formats:
   
