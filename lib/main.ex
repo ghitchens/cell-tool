@@ -17,12 +17,15 @@ defmodule Main do
   def main(["list"]), do: main(["list", nil])
   def main(["list", cspec]), do: Cmd.Discover.run(cspec)
 
-  def main(["push", wspec, cspec]), do: Cmd.Push.run(wspec, cspec)
+  def main(["push", cspec, wspec]), do: Cmd.Push.run(wspec, cspec)
 
   def main(["watch"]), do: Cmd.Watch.run
   def main(["watch", cspec]), do: Cmd.Watch.run(cspec)
   
   def main(["reboot", cspec]), do: Cmd.Reboot.run(cspec)
+  
+  def main(["services", cspec]), do: Cmd.Services.run(cspec)
+  def main(["services", cspec, filt]), do: Cmd.Services.run(cspec, filt)
 
   def main(["test", cspec]), do: Cmd.Test.run(cspec)
 
