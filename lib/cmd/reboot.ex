@@ -25,9 +25,9 @@ defmodule Cmd.Reboot do
     IO.write "rebooting:"
 		resp = HTTPotion.put(url, "{\"execute_reboot\": \"true\"}", ["Content-Type": "application/json"])
 		case resp.status_code do
-			500 ->  
-        IO.write "ERROR\n"
-			x ->    IO.write "ok\n"
+			200 ->  
+        IO.write "ok\n"
+			x ->    IO.write "ERROR\n"
 		end
   end
 end
