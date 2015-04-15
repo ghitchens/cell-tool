@@ -1,12 +1,16 @@
 defmodule Cmd.Denormalize do
-  
-  require Logger
-  
+  @moduledoc """
+
+  Denormalizes a cell to enable firmware fallback on a cell. This is
+  accomplished by setting the firmware status to `provisional`
+  """
+
+  @doc "Takes <cell> paramater from Cmd.main to perform action"
   def run(cspec) do
 		HTTPotion.start
     Finder.apply cspec, "Denormalizing", &(normalize(&1))
   end
-  
+
   defp normalize(cell) do
 		location = cell.location
 		url = Path.join location, "/sys/firmware/current"
@@ -20,5 +24,3 @@ defmodule Cmd.Denormalize do
 	end
 
 end
-  
-

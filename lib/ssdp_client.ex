@@ -1,6 +1,7 @@
-defmodule SsdpClient do  
-
-  require Logger
+defmodule SsdpClient do
+  @moduledoc """
+  Simple SSDP client used for discovery of cells
+  """
 
   @discover_gather_time   1000    # wait up to 1 second for responses
 
@@ -17,10 +18,10 @@ defmodule SsdpClient do
   # gather SSDP responses from an open socket until timeout occurs, then
   # close the socket and return the gathered responses
   defp gather_responses(socket, gathered \\ %{}) do
-    receive do 
+    receive do
       {:udp, socket, host, _port, msg} ->
         gather_responses(socket, merge_gathered(gathered, host, :erlang.list_to_binary(msg)))
-      :timeout -> 
+      :timeout ->
         :gen_udp.close(socket)
         gathered
     end
@@ -46,7 +47,7 @@ defmodule SsdpClient do
       end
     end
     resp = Enum.reject mapped_params, &(&1 == nil)
-    Dict.merge(%{}, resp) # convert to map, REVIEW better way? 
-  end  
-    
+    Dict.merge(%{}, resp) # convert to map, REVIEW better way?
+  end
+
 end

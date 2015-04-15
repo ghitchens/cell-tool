@@ -1,23 +1,23 @@
 defmodule Cmd.Ip do
-  
-  require Logger
-  
-  def run(cspec, ipspec) do
+  @moduledoc "Not yet implemented"
+
+  def run(cspec, ip, mask, router) do
 		HTTPotion.start
-    Finder.apply cspec, "Setting", &(setip(&1, ipspec))
+    Finder.apply cspec, "Setting", &(setip(&1, ip, mask, router))
   end
-  
-  defp setip(cell, ipspec) do
+
+  defp setip(cell, ip, mask, router) do
 		url = Path.join cell.location, "/sys/ip/static"
-    IO.write "#{cell.name} -> "
-		resp = HTTPotion.put(url, "{\"status\":\"normal\"}", ["Content-Type": "application/json"])
+    IO.write "#{cell.name} -> #{params(ip, mask, router)}"
+		resp = HTTPotion.put(url, params(ip, mask, router), ["Content-Type": "application/json"])
 		case resp.status_code do
 			200 ->  IO.write "ok\n"
-      400 ->  IO.write "already normal\n"
-			x ->    IO.write "NORMALIZATION FAILED (ERROR #{x})\n"
+      400 ->  IO.write "ERROR\n"
+			x ->    IO.write "FAILED (ERROR #{x})\n"
 		end
 	end
 
+  defp params(ip, mask, router) do
+    "{\"ip\":\"#{ip}\", \"mask\":\"#{mask}\", \"router\":\"#{router}\"}"
+  end
 end
-  
-

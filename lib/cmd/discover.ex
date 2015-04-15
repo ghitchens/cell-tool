@@ -1,6 +1,10 @@
 defmodule Cmd.Discover do
-  require Logger
-  
+  @moduledoc """
+  Discoveres cells on the local network and displays key information such as
+  the last octet of their IP, serial number, device type, and firmware version.
+  """
+
+  @doc "Takes paramater(s) from Cmd.main to perform action"
   def run(spec, _opts \\ %{}) do
 		HTTPotion.start
     Finder.apply spec, "NAME\tSERIAL#\t\tTYPE\tVERSION -",
@@ -12,16 +16,16 @@ defmodule Cmd.Discover do
 			{:error, x} ->
 				".#{c.name}\tError #{x} from #{inspect c}"
 			{:ok, svcs} ->
-        case svcs.root.description do     
+        case svcs.root.description do
           description when is_bitstring(description) -> # v2
             sf = svcs.firmware
-            sn = svcs.root.serial_number            
+            sn = svcs.root.serial_number
             model = svcs.root.model
-            case sf[:info] do 
-              nil -> 
+            case sf[:info] do
+              nil ->
                 fv = "BROKEN"
                 fs = "BROKEN"
-              fi -> 
+              fi ->
                 fv = fi.version
                 fs = fi.status
             end

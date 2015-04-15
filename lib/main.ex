@@ -1,37 +1,74 @@
 defmodule Main do
+  @moduledoc """
+  A simple command line interface for managing cells built using modules from the [Cellulose](cellulose.io) projects.
 
-  def main([]), do: main(["help"])
-  def main(["help"]), do: Cmd.Help.run
+  **Note:** All functions may not be usable with all cells. Since, all cells may not implement all modules offered by the Cellulose Project.
 
-  def main(["normal", cspec]), do: Cmd.Normalize.run(cspec)
-  def main(["normalize", cspec]), do: Cmd.Normalize.run(cspec)
+  ## Examples
 
-  def main(["denormal", cspec]), do: Cmd.Denormalize.run(cspec)
-  def main(["denormalize", cspec]), do: Cmd.Denormalize.run(cspec)
+      $ cell list
+      1 cells found
+      NAME	SERIAL#		TYPE	VERSION - 1 cell(s)
+      .172	CP1-xxxxx	CP1	  1.1.1
 
-  def main(["provision", cspec, app_id]), do: Cmd.Provision.run(cspec, app_id)
+      $ cell list -c .168
+      0 cells found matching ".168"
 
-  def main(["discover"]), do: main(["discover", nil])
-  def main(["discover", cspec]), do: Cmd.Discover.run(cspec)
+      $ cell push -c .168 -f _images/firmware.fw
+      Pushing '_images/firmwmare.fw' to ".168"
+      cell: /jrtp/sys/firmware/current -> ok
+  """
 
-  def main(["list"]), do: main(["list", nil])
-  def main(["list", cspec]), do: Cmd.Discover.run(cspec)
+  @doc "Function that gets call when run as CLI"
+  def main(args) do
+    args |> parse_args
+  end
 
-  def main(["push", cspec, wspec]), do: Cmd.Push.run(wspec, cspec)
+  # Parses the argument list and calls the appropirate module
+  defp parse_args(args) do
+    options = OptionParser.parse args, [aliases: aliases]
 
-  def main(["watch"]), do: Cmd.Watch.run
-  def main(["watch", cspec]), do: Cmd.Watch.run(cspec)
-  
-  def main(["reboot", cspec]), do: Cmd.Reboot.run(cspec)
-  
-  def main(["services", cspec]), do: Cmd.Services.run(cspec)
-  def main(["services", cspec, filt]), do: Cmd.Services.run(cspec, filt)
+    case options do
+      #Normailize
+      {[], ["normal"], []} -> Cmd.Normalize.run(nil)
+      {[], ["normal", cells], []} -> Cmd.Normalize.run(cells)
+      {[], ["normalize"], []} -> Cmd.Normalize.run(nil)
+      {[], ["normalize", cells], []} -> Cmd.Normalize.run(cells)
+      #Denormalize
+      {[], ["denormal", cells], []} -> Cmd.Denormalize.run(cells)
+      {[], ["denormalize", cells], []} -> Cmd.Denormalize.run(cells)
+      #Discover
+      {[], ["discover"], []} -> Cmd.Discover.run(nil)
+      {[], ["discover", cells], []} -> Cmd.Discover.run(cells)
+      {[], ["list"], []} -> Cmd.Discover.run(nil)
+      {[], ["list", cells], []} -> Cmd.Discover.run(cells)
+      #Provision
+      {[], ["provision", cells, app_id], []} -> Cmd.Provision.run(cells, app_id)
+      #Push
+      {[], ["provision", cells, fw], []} -> Cmd.Push.run(fw, cells)
+      #Watch
+      {[], ["watch"], []} -> Cmd.Watch.run
+      {["watch", cells], []} -> Cmd.Watch.run
+      #Reboot
+      {[], ["reboot", cells], []} -> Cmd.Reboot.run(cells)
+      #Inspect Hub
+      {[], ["inspect", cells], []} -> Cmd.Inspect.run(cells)
+      {[], ["inspect", cells, path], []} -> Cmd.Inspect.run(cells, path)
+      # IP
+      # {[cells: cells, ip: ip, mask: mask, router: router], ["static"], []} ->
+      #   Cmd.Ip.run(cells, ip, mask, router)
+      #Help
+      {[], ["help"], _} -> Cmd.Help.run
+      {[help: true], _, _} -> Cmd.Help.run
+      #Default
+      _ ->
+        IO.write "Invalid usage or malformed command\n\nUsage:\n\n"
+        Cmd.Help.run
+    end
+  end
 
-  def main(["test", cspec]), do: Cmd.Test.run(cspec)
-
-  def main(other) do
-		cmd = Enum.join(other, " ")
-		IO.write "invalid or malformed command: #{cmd}\n"
-	end
-
+  # definition of aliases to be used with OptionParser
+  defp aliases, do: [
+    h: :help
+  ]
 end

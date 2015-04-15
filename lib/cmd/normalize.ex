@@ -1,12 +1,17 @@
 defmodule Cmd.Normalize do
-  
-  require Logger
-  
+  @moduledoc """
+  Normalizes the firmware on a cell by setting the firmware status to `normal`.
+  This is used to "accept" firmware so that upon reboot the device will boot
+  to this version of firmware rather then falling back to previous firmware
+  version.
+  """
+
+  @doc "Takes paramater(s) from Cmd.main to perform action"
   def run(cspec) do
 		HTTPotion.start
     Finder.apply cspec, "Normalizing", &(normalize(&1))
   end
-  
+
   defp normalize(cell) do
 		location = cell.location
 		url = Path.join location, "/sys/firmware/current"
@@ -20,5 +25,3 @@ defmodule Cmd.Normalize do
 	end
 
 end
-  
-

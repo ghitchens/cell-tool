@@ -1,6 +1,6 @@
 defmodule Finder do
 
-  @doc """
+  @moduledoc """
   find cells matching cspec
   then put title with number of cells
   then run func with each cell as param
@@ -11,7 +11,7 @@ defmodule Finder do
 			cells = make_static_cell(cspec)
 	  else
 	    cells = discovered(cspec)
-		end		
+		end
     case Enum.count(cells) do
       0 -> nil
 			n ->
@@ -19,7 +19,7 @@ defmodule Finder do
     		for {_, cell} <- cells do
           func.(cell)
         end
-    end  
+    end
   end
 
 	# return a single cell with the specified location, because the user
@@ -27,14 +27,14 @@ defmodule Finder do
 	defp make_static_cell(cspec) do
 		%{ "remote": %{ location: "http://#{cspec}/nemo", name: cspec }}
 	end
-	
+
   def discovered(spec) do
 		cells = SsdpClient.discover |> spec(spec)
     n = Enum.count(cells)
     case spec do
-      nil -> 
+      nil ->
         IO.write "#{n} cells found\n"
-      _ -> 
+      _ ->
         IO.write "#{n} cells found matching \"#{spec}\"\n"
     end
     cells
@@ -57,4 +57,3 @@ defmodule Finder do
   end
 
 end
-

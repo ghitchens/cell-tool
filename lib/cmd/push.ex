@@ -1,7 +1,9 @@
 defmodule Cmd.Push do
+  @moduledoc """
+  Pushes the specified firmware bundle to a cell.
+  """
 
-  @name "cell"
-
+  @doc "Takes paramater(s) from Cmd.main to perform action"
   def run(wspec, cspec) do
 		HTTPotion.start
     ware = File.read! wspec
@@ -20,6 +22,3 @@ defmodule Cmd.Push do
   end
 
 end
-
-
-
