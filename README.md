@@ -31,7 +31,7 @@ cell discover [<cells>]           find cells using SSDP on the LAN
 cell watch [<cells>]              watch multicast debug log of one or more cells
 cell provision <cells> <app_id>   provisions a cell to the specified type
 cell push <cells> <ware>          push specific firmware to one or more cells
-cell inspect -<cells> [<path>]    inspect a part of the Hub path
+cell inspect <cells> [<path>]    inspect a part of the Hub path
 cell normal[ize] [<cells>]        make provisional firmware normal
 cell denormal[ize] <cells>        make normal firmwae provisional
 cell reboot <cells>               reboot a cell
