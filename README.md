@@ -73,6 +73,19 @@ Options:
         test_cell
 ```
 
+## Configuration
+
+Cell Tool may be configured at runtime by placing a .conf file at `~/.cell/cell.conf`
+
+Currently only the SSDP Service Type may be specified in the `~/.cell/cell.conf`
+file.
+
+    # Service Type for Cell tool to use in M-SEARCH
+    cell.ssdp_st = "urn:someorg-com:service:cell:1"
+
+By default Cell Tool will conduct it's M-SEARCH requests with the Service Type:
+`urn:cellulose-io:service:cell:1`
+
 ## Wishlist
 
     cell alias <cells> <alias>  			Make an alias for one or more cells

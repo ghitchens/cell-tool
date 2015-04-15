@@ -5,12 +5,13 @@ defmodule SsdpClient do
 
   @discover_gather_time   1000    # wait up to 1 second for responses
 
-  @msearch_msg "M-SEARCH * HTTP/1.1\r\nHost: 239.255.255.250:1900\r\nMAN: \"ssdp:discover\"\r\nST: urn:rosepointnav-com:service:nemo:1\r\nMX: 10\r\n\r\n"
+  @default_ssdp_st "urn:cellulose-io:service:cell:1"
 
   @doc "listen for a bit after an msearch and see who we hear from"
   def discover do
+    IO.puts "==> #{IO.ANSI.green}Searching with SSDP Service Type: #{ssdp_st}#{IO.ANSI.reset}"
     {:ok, socket} = :gen_udp.open(1900, [{:reuseaddr,true}])
-    :gen_udp.send(socket, {239,255,255,250}, 1900, @msearch_msg)
+    :gen_udp.send(socket, {239,255,255,250}, 1900, msearch_msg)
     Process.send_after self, :timeout, @discover_gather_time
     gather_responses(socket)
   end
@@ -50,4 +51,22 @@ defmodule SsdpClient do
     Dict.merge(%{}, resp) # convert to map, REVIEW better way?
   end
 
+  def msearch_msg do
+    "M-SEARCH * HTTP/1.1\r\n" <>
+    "Host: 239.255.255.250:1900\r\n" <>
+    "MAN: \"ssdp:discover\"\r\n" <>
+    "ST: #{ssdp_st}\r\nMX: 10\r\n\r\n"
+  end
+
+  defp ssdp_st do
+    path = Path.expand "~/.cell/cell.conf"
+    case Conform.Parse.file(path) do
+      {:error, _} -> @default_ssdp_st
+      conf ->
+        case :proplists.get_value(['cell','ssdp_st'], conf) do
+          :undefined -> @default_ssdp_st
+          st -> st
+        end
+    end
+  end
 end
