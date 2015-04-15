@@ -75,8 +75,8 @@ Options:
 
 ## Wishlist
 
-cell alias <cells> <alias>  			Make an alias for one or more cells
-cell static <cell> <config>|clear			Set a static IP on a cell
+    cell alias <cells> <alias>  			Make an alias for one or more cells
+    cell static <cell> <config>|clear			Set a static IP on a cell
 
 ## Contributing
 
