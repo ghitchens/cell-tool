@@ -6,6 +6,8 @@ defmodule Finder do
   then run func with each cell as param
   """
 
+  @default_service_path "jrtp"
+
   def apply(cspec, title, func) do
 	  if :erlang.is_binary(cspec) and String.length(cspec) > 5 do
 			cells = make_static_cell(cspec)
@@ -25,7 +27,7 @@ defmodule Finder do
 	# return a single cell with the specified location, because the user
 	# asked for a specific cell in ip:port form.
 	defp make_static_cell(cspec) do
-		%{ "remote": %{ location: "http://#{cspec}/nemo", name: cspec }}
+		%{ "remote": %{ location: "http://#{cspec}/#{services_loc}", name: cspec }}
 	end
 
   def discovered(spec) do
@@ -56,4 +58,17 @@ defmodule Finder do
     end
   end
 
+  # Determines the services location path on a static cell using
+  # config file if possible or using default
+  defp services_loc do
+    conf_path = Path.expand "~/.cell/cell.conf"
+    case Conform.Parse.file(conf_path) do
+      {:error, _} -> @default_service_path
+      conf ->
+        case :proplists.get_value(['cell','services_path'], conf) do
+          :undefined -> @default_service_path
+          st -> st
+        end
+    end
+  end
 end

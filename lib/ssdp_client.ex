@@ -9,7 +9,7 @@ defmodule SsdpClient do
 
   @doc "listen for a bit after an msearch and see who we hear from"
   def discover do
-    IO.puts "==> #{IO.ANSI.green}Searching with SSDP Service Type: #{ssdp_st}#{IO.ANSI.reset}"
+    #IO.puts "==> #{IO.ANSI.green}Searching with SSDP Service Type: #{ssdp_st}#{IO.ANSI.reset}"
     {:ok, socket} = :gen_udp.open(1900, [{:reuseaddr,true}])
     :gen_udp.send(socket, {239,255,255,250}, 1900, msearch_msg)
     Process.send_after self, :timeout, @discover_gather_time

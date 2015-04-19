@@ -4,7 +4,7 @@ defmodule CellTool.Mixfile do
 
   def project do
     [app: :celltool,
-     escript: [main_module: Main, name: "cell", path: "/usr/local/bin/cell"],
+     escript: [main_module: CellTool, name: "cell", path: "/usr/local/bin/cell"],
      version: version,
      elixir: "~> 1.0",
      deps: deps]

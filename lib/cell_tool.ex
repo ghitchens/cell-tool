@@ -1,4 +1,4 @@
-defmodule Main do
+defmodule CellTool do
   @moduledoc """
   A simple command line interface for managing cells built using modules from the [Cellulose](cellulose.io) projects.
 
@@ -48,7 +48,7 @@ defmodule Main do
       {[], ["provision", cells, fw], []} -> Cmd.Push.run(fw, cells)
       #Watch
       {[], ["watch"], []} -> Cmd.Watch.run
-      {["watch", cells], []} -> Cmd.Watch.run
+      {[], ["watch", cells], []} -> Cmd.Watch.run(cells)
       #Reboot
       {[], ["reboot", cells], []} -> Cmd.Reboot.run(cells)
       #Inspect Hub
