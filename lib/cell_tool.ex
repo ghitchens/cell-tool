@@ -4,6 +4,21 @@ defmodule CellTool do
 
   **Note:** All functions may not be usable with all cells. Since, all cells may not implement all modules offered by the Cellulose Project.
 
+  ## Configuration Example
+
+  Runtime configuration is possible by placing a file at `~/cell/cell.conf` with
+  the following format:
+
+  ```bash
+  # Service Type for Cell tool to use in M-SEARCH
+  # Default: "urn:cellulose-io:serivce:cell:1"
+  cell.ssdp_st = "urn:mydomain-com:service:audio:1"
+
+  # Services Doc location relative to base path
+  # Default: "jrtp"
+  cell.services_path = "nemo"
+  ```
+
   ## Examples
 
       $ cell list
