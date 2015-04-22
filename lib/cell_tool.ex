@@ -60,7 +60,7 @@ defmodule CellTool do
       #Provision
       {[], ["provision", cells, app_id], []} -> Cmd.Provision.run(cells, app_id)
       #Push
-      {[], ["provision", cells, fw], []} -> Cmd.Push.run(fw, cells)
+      {[], ["push", cells, fw], []} -> Cmd.Push.run(fw, cells)
       #Watch
       {[], ["watch"], []} -> Cmd.Watch.run
       {[], ["watch", cells], []} -> Cmd.Watch.run(cells)
