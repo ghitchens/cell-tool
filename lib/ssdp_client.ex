@@ -2,10 +2,11 @@ defmodule SsdpClient do
   @moduledoc """
   Simple SSDP client used for discovery of cells
   """
+  require Logger
+  
+  @discover_gather_time   2000    # wait up to 2 seconds for responses
 
-  @discover_gather_time   1000    # wait up to 1 second for responses
-
-  @default_ssdp_st "urn:cellulose-io:service:cell:1"
+  @default_ssdp_st "urn:nerves-io:service:cell:1"
 
   @doc "listen for a bit after an msearch and see who we hear from"
   def discover do
@@ -62,7 +63,8 @@ defmodule SsdpClient do
     path = Path.expand "~/.cell/cell.conf"
     case Conform.Parse.file(path) do
       {:error, _} -> @default_ssdp_st
-      conf ->
+      {:ok, conf} ->
+        # Logger.info "conf: #{inspect conf}"
         case :proplists.get_value(['cell','ssdp_st'], conf) do
           :undefined -> @default_ssdp_st
           st -> st

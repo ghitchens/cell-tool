@@ -15,12 +15,14 @@ defmodule CellTool.Mixfile do
   ]
 
   defp deps, do: [
-                {:earmark, "~> 0.1", only: :dev},
-                {:ex_doc, "~> 0.7", only: :dev},
-		{:exjsx, "~> 3.0.0" },
-		{:ibrowse, github: "cmullaparthi/ibrowse", tag: "v4.1.0"},
-		{:httpotion, "~> 0.2.4"},
-                {:conform, github: "bitwalker/conform"}
+		{:exjsx, "~> 3.2.0" },
+    {:ibrowse, github: "cmullaparthi/ibrowse", ref: "5ee4a80"},
+    #{:ibrowse, github: "cmullaparthi/ibrowse"},
+#		{:httpotion, "~> 0.2.4"},
+    {:httpotion, "~> 2.1"},
+    {:conform, "~> 0.17"},
+    {:earmark, "~> 0.1", only: :dev},
+    {:ex_doc, "~> 0.8", only: :dev}
 	]
 
   defp version do

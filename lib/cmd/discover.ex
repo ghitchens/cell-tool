@@ -1,6 +1,6 @@
 defmodule Cmd.Discover do
   @moduledoc """
-  Discoveres cells on the local network and displays key information such as
+  Discoveres cells on the LOcal network and displays key information such as
   the last octet of their IP, serial number, device type, and firmware version.
   """
 
