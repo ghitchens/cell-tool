@@ -6,16 +6,16 @@ defmodule Cmd.Discover do
 
   @doc "Takes paramater(s) from Cmd.main to perform action"
   def run(spec, _opts \\ %{}) do
-		HTTPotion.start
+    HTTPotion.start
     Finder.apply spec, "NAME\tSERIAL#\t\tTYPE\tVERSION -",
       &(IO.write fsr(&1)<>"\n")
   end
 
   defp fsr(c) do
-		case Jrtp.get_services(c) do
-			{:error, x} ->
-				".#{c.name}\tError #{x} from #{inspect c}"
-			{:ok, svcs} ->
+    case Jrtp.get_services(c) do
+      {:error, x} ->
+        ".#{c.name}\tError #{x} from #{inspect c}"
+      {:ok, svcs} ->
         case svcs.root.description do
           description when is_bitstring(description) -> # v2
             sf = svcs.firmware
@@ -41,7 +41,6 @@ defmodule Cmd.Discover do
           _fw_status ->
             "#{c.name}\t#{sn}\t#{model}\t#{fv} (#{fs})"
         end
-		end
+    end
   end
-
 end
