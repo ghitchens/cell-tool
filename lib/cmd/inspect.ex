@@ -24,18 +24,19 @@ defmodule Cmd.Inspect do
   end
 
   defp get_services_doc(cell, path) do
-		location = cell.location
-		url = case path do
+    location = cell.location
+    url = case path do
       nil -> location
       p -> location<>p
     end
     IO.write "from #{url} -> "
-		resp = HTTPotion.get(url)
-		case resp.status_code do
-			200 ->
+    resp = HTTPotion.get(url)
+    case resp.status_code do
+      200 ->
         IO.write "ok\n"
         IO.write "#{resp.body}\n\n"
-			x ->    IO.write "ERROR\n"
-		end
+      _ ->
+        IO.write "ERROR\n"
+    end
   end
 end

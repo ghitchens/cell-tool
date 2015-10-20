@@ -1,22 +1,22 @@
 defmodule Cmd.Watch do
-	@moduledoc """
-	Watches the Logging UDP stream of all cells or the specified cell. The output
-	is prepended by the last octet of the IP address then the logging message.
+  @moduledoc """
+  Watches the Logging UDP stream of all cells or the specified cell. The output
+  is prepended by the last octet of the IP address then the logging message.
 
-	UDP address: 224.0.0.224
-	Port: 9999
-	"""
+  UDP address: 224.0.0.224
+  Port: 9999
+  """
 
-	@mcast_log_group {224,0,0,224}
-	@mcast_log_port  9999
+  @mcast_log_group {224,0,0,224}
+  @mcast_log_port  9999
 
-	@doc "Starts the watch on all cells"
+  @doc "Starts the watch on all cells"
   def run do
     {:ok, socket} = setup_socket
     watch_mcast(socket)
   end
 
-	@doc "Starts the watch on the specified cells"
+  @doc "Starts the watch on the specified cells"
   def run(ip_addr) do
     {:ok, socket} = setup_socket
     watch_mcast(socket, %{ip: ip_addr})
@@ -36,13 +36,12 @@ defmodule Cmd.Watch do
       [_, ip] = String.split(opts[:ip], ".")
       String.to_integer(ip)
     end
-  	receive do
-  		{:udp, socket, {_,_,_,n}, _port, msg} ->
+    receive do
+      {:udp, socket, {_,_,_,n}, _port, msg} ->
           if ip == nil or n == ip do
             IO.write ".#{n}\t#{msg}"
-  	    watch_mcast(socket, opts)
+            watch_mcast(socket, opts)
           end
-  	end
+    end
   end
-
 end

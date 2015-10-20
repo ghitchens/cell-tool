@@ -3,7 +3,7 @@ defmodule SsdpClient do
   Simple SSDP client used for discovery of cells
   """
   require Logger
-  
+
   @discover_gather_time   2000    # wait up to 2 seconds for responses
 
   @default_ssdp_st "urn:nerves-io:service:cell:1"
@@ -31,15 +31,18 @@ defmodule SsdpClient do
 
   defp merge_gathered(gathered, host, packet) do
     resp = decode_ssdp_packet(packet)
-		{usn, resp} = Dict.pop resp, :usn
+    {usn, resp} = Dict.pop resp, :usn
     {_,_,_,l} = host
-		resp = Dict.merge resp, %{ip: host, name: ".#{l}"}
+    resp = Dict.merge resp, %{ip: host, name: ".#{l}"}
     Dict.put gathered, usn, resp
   end
 
   # returns keys/values given an ssdp packet
   defp decode_ssdp_packet(packet) do
-    {[_raw_http_line], raw_params} = String.split(packet, ["\r\n", "\n"]) |> Enum.split(1)
+    {[_raw_http_line], raw_params} =
+      packet
+      |> String.split(["\r\n", "\n"])
+      |> Enum.split(1)
     #http_line = String.downcase(raw_http_line) |> String.strip
     #{[http_verb, {full_uri], _rest} = String.split(http_line) |> Enum.split(2)
     mapped_params = Enum.map raw_params, fn(x) ->

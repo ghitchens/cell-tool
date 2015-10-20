@@ -9,29 +9,29 @@ defmodule Finder do
   @default_service_path "jrtp"
 
   def apply(cspec, title, func) do
-	  if :erlang.is_binary(cspec) and String.length(cspec) > 5 do
-			cells = make_static_cell(cspec)
-	  else
-	    cells = discovered(cspec)
-		end
+    if :erlang.is_binary(cspec) and String.length(cspec) > 5 do
+      cells = make_static_cell(cspec)
+    else
+      cells = discovered(cspec)
+    end
     case Enum.count(cells) do
       0 -> nil
-			n ->
+      n ->
         IO.write "#{title} #{n} cell(s)\n"
-    		for {_, cell} <- cells do
+        for {_, cell} <- cells do
           func.(cell)
         end
     end
   end
 
-	# return a single cell with the specified location, because the user
-	# asked for a specific cell in ip:port form.
-	defp make_static_cell(cspec) do
-		%{ "remote": %{ location: "http://#{cspec}/#{services_loc}", name: cspec }}
-	end
+  # return a single cell with the specified location, because the user
+  # asked for a specific cell in ip:port form.
+  defp make_static_cell(cspec) do
+  %{ "remote": %{ location: "http://#{cspec}/#{services_loc}", name: cspec }}
+  end
 
   def discovered(spec) do
-		cells = SsdpClient.discover |> spec(spec)
+  cells = SsdpClient.discover |> spec(spec)
     n = Enum.count(cells)
     case spec do
       nil ->
