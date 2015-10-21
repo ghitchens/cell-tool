@@ -24,19 +24,22 @@ defmodule Cmd.Inspect do
   end
 
   defp get_services_doc(cell, path) do
-    location = cell.location
-    url = case path do
-      nil -> location
-      p -> location<>p
-    end
-    IO.write "from #{url} -> "
-    resp = HTTPotion.get(url)
-    case resp.status_code do
-      200 ->
-        IO.write "ok\n"
-        IO.write "#{resp.body}\n\n"
-      _ ->
-        IO.write "ERROR\n"
-    end
+    url =
+      cell
+      |> create_url(path)
+
+    url
+    |> HTTPotion.get()
+    |> verify_status()
+    |> response("from #{url} -> ")
+    |> IO.write()
   end
+
+  defp create_url(cell, nil), do: cell.location
+  defp create_url(cell, p), do: cell.location <> p
+
+  defp verify_status({:ok, %HTTPotion.Response{status_code: 200, body: body}}), do: "ok\n#{body}\n\n"
+  defp verify_status({:ok, _}), do: "ERROR\n"
+
+  defp response(message, prefix), do: "#{prefix} #{message}"
 end
