@@ -34,9 +34,12 @@ defmodule CellTool do
       cell: /jrtp/sys/firmware/current -> ok
   """
 
+  @cell_tool_version Mix.Project.config[:version]
+
   @doc "Function that gets call when run as CLI"
   def main(args) do
-    args |> parse_args
+    args
+      |> parse_args
   end
 
   # Parses the argument list and calls the appropirate module
@@ -44,7 +47,7 @@ defmodule CellTool do
     options = OptionParser.parse args, [aliases: aliases]
 
     case options do
-      #Normailize
+      #Normalize
       {[], ["normal"], []} -> Cmd.Normalize.run(nil)
       {[], ["normal", cells], []} -> Cmd.Normalize.run(cells)
       {[], ["normalize"], []} -> Cmd.Normalize.run(nil)
@@ -75,6 +78,9 @@ defmodule CellTool do
       #Help
       {[], ["help"], _} -> Cmd.Help.run
       {[help: true], _, _} -> Cmd.Help.run
+      #Version
+      {[], ["version"], _} -> IO.write "cell v#{@cell_tool_version}"
+      {[version: true], _, _} -> IO.write "cell v#{@cell_tool_version}"
       #Default
       _ ->
         IO.write "Invalid usage or malformed command\n\nUsage:\n\n"
@@ -83,7 +89,5 @@ defmodule CellTool do
   end
 
   # definition of aliases to be used with OptionParser
-  defp aliases, do: [
-    h: :help
-  ]
+  defp aliases, do: [h: :help, v: :version]
 end
