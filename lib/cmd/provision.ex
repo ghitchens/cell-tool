@@ -34,19 +34,17 @@ defmodule Cmd.Provision do
         lock_cell(cell, lock_blob)
       _ -> nil
     end
-
   end
 
   defp lock_cell(cell, lock_blob) do
-    url = Path.join(cell.location, @lock_path)
-    resp = HTTPotion.put(url, lock_blob, ["Content-Type": @lock_mime], timeout: @lock_timeout)
-    case resp.status_code do
-      201 ->
-        IO.write "ok\n"
-      204 ->
-        IO.write "ok\n"
-      x ->
-        IO.write "LOCK FAILED (ERROR #{x})\n"
-    end
+    cell.location
+    |> Path.join(@lock_path)
+    |> HTTPotion.put(lock_blob, ["Content-Type": @lock_mime], timeout: @lock_timeout)
+    |> verify_status()
+    |> IO.write()
   end
+
+  defp verify_status({:ok, %HTTPotion.Response{status_code: 201}}), do: "ok\n"
+  defp verify_status({:ok, %HTTPotion.Response{status_code: 204}}), do: "ok\n"
+  defp verify_status({:ok, %HTTPotion.Response{status_code: x}}), do: "LOCK FAILED (ERROR #{x})\n"
 end
