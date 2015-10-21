@@ -8,30 +8,37 @@ defmodule Cmd.Reboot do
   end
 
   defp enable_reboot(cell) do
-    location = cell.location
-    url = location <> "sys/firmware/reboot"
-    IO.write "reboot enable: #{location} -> "
-    resp = HTTPotion.put(url, ~s({"enable_reboot": "true"}), ["Content-Type": "application/json"])
-    case resp.status_code do
-      200 ->
-        IO.write "enabled\n"
-        :timer.sleep(250)
-        execute_reboot(cell)
-      _ ->
-        IO.write "ERROR\n"
-    end
+    cell
+    |> create_url()
+    |> HTTPotion.put(~s({"enable_reboot": "true"}), ["Content-Type": "application/json"])
+    |> verify_status_enable_reboot(cell)
+    |> response("reboot enable: #{cell.location} -> ")
+    |> IO.write()
   end
 
   defp execute_reboot(cell) do
-    location = cell.location
-    url = location <> "sys/firmware/reboot"
-    IO.write "rebooting:"
-    resp = HTTPotion.put(url, ~s({"execute_reboot": "true"}), ["Content-Type": "application/json"])
-    case resp.status_code do
-      200 ->
-        IO.write "ok\n"
-      _ ->
-        IO.write "ERROR\n"
-    end
+    cell
+    |> create_url()
+    |> HTTPotion.put(~s({"execute_reboot": "true"}), ["Content-Type": "application/json"])
+    |> verify_status_ex_reboot()
+    |> response("rebooting:")
+    |> IO.write()
   end
+
+  defp create_url(cell) do
+    cell.location
+    |> Path.join("sys/firmware/reboot")
+  end
+
+  defp verify_status_enable_reboot({:ok, %HTTPotion.Response{status_code: 200}}, cell) do
+    :timer.sleep(250)
+    execute_reboot(cell)
+    "enabled\n"
+  end
+  defp verify_status_enable_reboot({:ok, _}, _), do: "ERROR\n"
+
+  defp verify_status_ex_reboot({:ok, %HTTPotion.Response{status_code: 200}}), do: "ok\n"
+  defp verify_status_ex_reboot({:ok, _}), do: "ERROR\n"
+
+  defp response(message, prefix), do: "#{prefix} #{message}"
 end
