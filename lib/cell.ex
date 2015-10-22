@@ -40,7 +40,7 @@ defmodule Nerves.CLI.Cell do
   @doc "Function that gets call when run as CLI"
   def main(args) do
     args
-      |> parse_args
+    |> parse_args
   end
 
   # Parses the argument list and calls the appropirate module
