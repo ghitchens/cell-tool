@@ -15,7 +15,7 @@ defmodule Nerves.CLI.Cell.Cmd.Provision do
   @lock_timeout 15000
   @provision_dir "~/.cell/provision/"
 
-  alias Nerves.Cell.CLI.Jrtp
+  alias Nerves.Cell.CLI.JRTP
   
   @doc "Takes paramater(s) from Cmd.main to perform action"
   def run(cspec, app_id) do
@@ -24,7 +24,7 @@ defmodule Nerves.CLI.Cell.Cmd.Provision do
   end
 
   defp provision(cell, app_id) do
-    {:ok, services} = Jrtp.get_services(cell)
+    {:ok, services} = JRTP.get_services(cell)
     {_, config} = Code.eval_file("#{app_id}.exs", @provision_dir)
     serial_number = services.root.serial_number
 
