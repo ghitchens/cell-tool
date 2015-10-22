@@ -1,4 +1,4 @@
-defmodule Inet do
+defmodule Nerves.CLI.Cell.Inet do
 
   @doc """
   Parses an IP address (given as tuple) and returns an IPv4 or IPv6 address string.
@@ -8,4 +8,5 @@ defmodule Inet do
     |> :inet.ntoa()
     |> :erlang.list_to_binary()
   end
+
 end

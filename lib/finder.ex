@@ -1,4 +1,4 @@
-defmodule Finder do
+defmodule Nerves.CLI.Cell.Finder do
 
   @moduledoc """
   find cells matching cspec
@@ -6,6 +6,8 @@ defmodule Finder do
   then run func with each cell as param
   """
 
+  alias Nerves.CLI.Cell.SSDPClient
+  
   @default_service_path "jrtp"
 
   def apply(cspec, title, func) do
@@ -31,7 +33,7 @@ defmodule Finder do
   end
 
   def discovered(spec) do
-  cells = SsdpClient.discover |> spec(spec)
+  cells = SSDPClient.discover |> spec(spec)
     n = Enum.count(cells)
     case spec do
       nil ->

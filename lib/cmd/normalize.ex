@@ -1,4 +1,4 @@
-defmodule Cmd.Normalize do
+defmodule Nerves.CLI.Cell.Cmd.Normalize do
   @moduledoc """
   Normalizes the firmware on a cell by setting the firmware status to `normal`.
   This is used to "accept" firmware so that upon reboot the device will boot

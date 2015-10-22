@@ -1,4 +1,4 @@
-defmodule Cmd.Test do
+defmodule Nerves.CLI.Cell.Cmd.Test do
   @moduledoc "Not yet implemented"
 
   def run(cspec) do

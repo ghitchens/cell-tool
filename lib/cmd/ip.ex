@@ -1,4 +1,4 @@
-defmodule Cmd.Ip do
+defmodule Nerves.CLI.Cell.Cmd.Ip do
   @moduledoc "Not yet implemented"
 
   def run(cspec, ip, mask, router) do

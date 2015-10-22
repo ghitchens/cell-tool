@@ -1,4 +1,4 @@
-defmodule CellTool do
+defmodule Nerves.CLI.Cell do
   @moduledoc """
   A simple command line interface for managing cells built using modules from the [Cellulose](cellulose.io) projects.
 
@@ -33,7 +33,8 @@ defmodule CellTool do
       Pushing '_images/firmwmare.fw' to ".168"
       cell: /jrtp/sys/firmware/current -> ok
   """
-
+  alias Nerves.CLI.Cell.Cmd
+  
   @cell_tool_version Mix.Project.config[:version]
 
   @doc "Function that gets call when run as CLI"

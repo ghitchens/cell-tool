@@ -1,4 +1,4 @@
-defmodule Cmd.Inspect do
+defmodule Nerves.CLI.Cell.Cmd.Inspect do
   @moduledoc """
   Inspects a portion of the Hub tree provided by the cell through its JSON/HTTP
   API. This does not provide as much detail as Hub.dump/0 in the Hub modules,

@@ -1,4 +1,4 @@
-defmodule SsdpClient do
+defmodule Nerves.CLI.Cell.SSDPClient do
   @moduledoc """
   Simple SSDP client used for discovery of cells
   """

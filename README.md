@@ -1,5 +1,5 @@
-CELL TOOL
-========
+CELL
+====
 
 A simple command line interface for managing cells built using modules from the [Cellulose](cellulose.io) projects.
 

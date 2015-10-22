@@ -1,10 +1,9 @@
-defmodule Jrtp do
-
-  require Logger
-
+defmodule Nerves.CLI.Cell.JRTP do
   @moduledoc """
   Simple decoder of services document provided by cell
   """
+
+  require Logger
 
   @doc "gets cells services document and returns {:ok, services}]"
   def get_services(cell) do
@@ -21,6 +20,11 @@ defmodule Jrtp do
     |> verify_status()
   end
 
-  defp verify_status({:ok, %HTTPotion.Response{status_code: 200, body: body}}), do: JSX.decode(body, [{:labels, :atom}])
-  defp verify_status({:ok, %HTTPotion.Response{status_code: x}}), do: raise "services request failed with error #{x}"
+  defp verify_status(%HTTPotion.Response{status_code: 200, body: body}) do
+    JSX.decode(body, [{:labels, :atom}])
+  end
+  
+  defp verify_status(%HTTPotion.Response{status_code: x}) do
+    raise "services request failed with HTTP status code #{x}"
+  end
 end

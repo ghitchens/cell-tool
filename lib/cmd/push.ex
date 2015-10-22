@@ -1,4 +1,4 @@
-defmodule Cmd.Push do
+defmodule Nerves.CLI.Cell.Cmd.Push do
   @moduledoc """
   Pushes the specified firmware bundle to a cell.
   """

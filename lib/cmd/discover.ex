@@ -1,8 +1,11 @@
-defmodule Cmd.Discover do
+defmodule Nerves.CLI.Cell.Cmd.Discover do
   @moduledoc """
   Discoveres cells on the LOcal network and displays key information such as
   the last octet of their IP, serial number, device type, and firmware version.
   """
+
+  alias Nerves.CLI.Cell.JRTP
+  alias Nerves.CLI.Cell.Finder
 
   @doc "Takes paramater(s) from Cmd.main to perform action"
   def run(spec, _opts \\ %{}) do
@@ -12,7 +15,7 @@ defmodule Cmd.Discover do
   end
 
   defp fsr(c) do
-    case Jrtp.get_services(c) do
+    case JRTP.get_services(c) do
       {:error, x} ->
         ".#{c.name}\tError #{x} from #{inspect c}"
       {:ok, svcs} ->

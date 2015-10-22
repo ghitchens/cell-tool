@@ -1,4 +1,4 @@
-defmodule Cmd.Help do
+defmodule Nerves.CLI.Cell.Cmd.Help do
   @moduledoc """
   Provides help and usage of the cell tool
   """

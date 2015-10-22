@@ -1,4 +1,4 @@
-defmodule Cmd.Reboot do
+defmodule Nerves.CLI.Cell.Cmd.Reboot do
   @moduledoc "Reboots a cell"
 
   @doc "Takes paramater(s) from Cmd.main to perform action"

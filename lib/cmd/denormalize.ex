@@ -1,4 +1,4 @@
-defmodule Cmd.Denormalize do
+defmodule Nerves.CLI.Cell.Cmd.Denormalize do
   @moduledoc """
 
   Denormalizes a cell to enable firmware fallback on a cell. This is

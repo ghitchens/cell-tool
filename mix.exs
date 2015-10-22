@@ -1,10 +1,10 @@
-defmodule CellTool.Mixfile do
+defmodule Nerves.CLI.Cell.Mixfile do
 
   use Mix.Project
 
   def project do
-    [app: :celltool,
-     escript: [main_module: CellTool, name: "cell", path: "/usr/local/bin/cell"],
+    [app: :cell,
+     escript: [main_module: Nerves.CLI.Cell, name: "cell", path: "/usr/local/bin/cell"],
      version: version,
      elixir: "~> 1.0",
      deps: deps]
@@ -17,8 +17,6 @@ defmodule CellTool.Mixfile do
   defp deps, do: [
     {:exjsx, "~> 3.2.0" },
     {:ibrowse, github: "cmullaparthi/ibrowse", ref: "5ee4a80"},
-    #{:ibrowse, github: "cmullaparthi/ibrowse"},
-    #{:httpotion, "~> 0.2.4"},
     {:httpotion, "~> 2.1"},
     {:conform, "~> 0.17"},
     {:earmark, "~> 0.1", only: :dev},
