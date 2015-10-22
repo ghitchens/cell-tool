@@ -11,8 +11,8 @@ defmodule SsdpClient do
   @doc "listen for a bit after an msearch and see who we hear from"
   def discover do
     #IO.puts "==> #{IO.ANSI.green}Searching with SSDP Service Type: #{ssdp_st}#{IO.ANSI.reset}"
-    {:ok, socket} = :gen_udp.open(1900, [{:reuseaddr,true}])
-    :gen_udp.send(socket, {239,255,255,250}, 1900, msearch_msg)
+    {:ok, socket} = :gen_udp.open(1900, [{:reuseaddr, true}])
+    :gen_udp.send(socket, {239, 255, 255, 250}, 1900, msearch_msg)
     Process.send_after self, :timeout, @discover_gather_time
     gather_responses(socket)
   end
@@ -32,7 +32,7 @@ defmodule SsdpClient do
   defp merge_gathered(gathered, host, packet) do
     resp = decode_ssdp_packet(packet)
     {usn, resp} = Dict.pop resp, :usn
-    {_,_,_,l} = host
+    {_, _, _, l} = host
     resp = Dict.merge resp, %{ip: host, name: ".#{l}"}
     Dict.put gathered, usn, resp
   end

@@ -13,17 +13,17 @@ defmodule Cmd.Normalize do
   end
 
   defp normalize(cell) do
-    location = cell.location
-    url = Path.join location, "/sys/firmware/current"
-    IO.write "#{cell.name} -> "
-    resp = HTTPotion.put(url, ~s({"status": "normal"}), ["Content-Type": "application/json"])
-    case resp.status_code do
-      200 ->
-        IO.write "ok\n"
-      400 ->
-        IO.write "already normal\n"
-      x ->
-        IO.write "NORMALIZATION FAILED (ERROR #{x})\n"
-    end
+    cell.location
+    |> Path.join("/sys/firmware/current")
+    |> HTTPotion.put(~s({"status": "normal"}), ["Content-Type": "application/json"])
+    |> verify_status()
+    |> response("#{cell.name} -> ")
+    |> IO.write()
   end
+
+  defp verify_status({:ok, %HTTPotion.Response{status_code: 200}}), do: "ok\n"
+  defp verify_status({:ok, %HTTPotion.Response{status_code: 400}}), do: "already normal\n"
+  defp verify_status({:ok, %HTTPotion.Response{status_code: x}}), do: "NORMALIZATION FAILED (ERROR #{x})\n"
+
+  defp response(message, prefix), do: "#{prefix} -> #{message}"
 end

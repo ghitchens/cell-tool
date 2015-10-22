@@ -16,7 +16,9 @@ defmodule Cmd.Help do
   cell normal[ize] [<cells>]        make provisional firmware normal
   cell denormal[ize] <cells>        make normal firmwae provisional
   cell reboot <cells>               reboot a cell
+  cell [--version]                  show version for this program
   cell [--help]                     shows this help message
+
 
 
   Options:

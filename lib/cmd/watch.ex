@@ -7,8 +7,8 @@ defmodule Cmd.Watch do
   Port: 9999
   """
 
-  @mcast_log_group {224,0,0,224}
-  @mcast_log_port  9999
+  @mcast_log_group {224, 0, 0, 224}
+  @mcast_log_port 9999
 
   @doc "Starts the watch on all cells"
   def run do
@@ -25,7 +25,7 @@ defmodule Cmd.Watch do
   defp setup_socket do
     {:ok, socket} = :gen_udp.open @mcast_log_port, multicast_loop: false,
        multicast_if: {0, 0, 0, 0}, multicast_ttl: 4
-    :ok = :inet.setopts socket, add_membership: {@mcast_log_group, {0,0,0,0}}
+    :ok = :inet.setopts socket, add_membership: {@mcast_log_group, {0, 0, 0, 0}}
     IO.write "watching debug log from multicast group #{Inet.ntoa(@mcast_log_group)}:#{@mcast_log_port}\n\n"
     {:ok, socket}
   end

@@ -7,20 +7,21 @@ defmodule Cmd.Ip do
   end
 
   defp setip(cell, ip, mask, router) do
-    url = Path.join cell.location, "/sys/ip/static"
-    IO.write "#{cell.name} -> #{params(ip, mask, router)}"
-    resp = HTTPotion.put(url, params(ip, mask, router), ["Content-Type": "application/json"])
-    case resp.status_code do
-      200 ->
-        IO.write "ok\n"
-      400 ->
-        IO.write "ERROR\n"
-      x ->
-        IO.write "FAILED (ERROR #{x})\n"
-    end
+    cell.location
+    |> Path.join("/sys/ip/static")
+    |> HTTPotion.put(params(ip, mask, router), ["Content-Type": "application/json"])
+    |> verify_status()
+    |> response("#{cell.name} -> #{params(ip, mask, router)}")
+    |> IO.write()
   end
 
   defp params(ip, mask, router) do
     ~s({"ip": "#{ip}", "mask": "#{mask}", "router": "#{router}"})
   end
+
+  defp verify_status({:ok, %HTTPotion.Response{status_code: 200}}), do: "ok\n"
+  defp verify_status({:ok, %HTTPotion.Response{status_code: 400}}), do: "ERROR\n"
+  defp verify_status({:ok, %HTTPotion.Response{status_code: x}}), do: "FAILED (ERROR #{x})\n"
+
+  defp response(message, prefix), do: "#{prefix} #{message}"
 end

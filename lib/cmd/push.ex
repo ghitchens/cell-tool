@@ -11,15 +11,16 @@ defmodule Cmd.Push do
   end
 
   defp push_to_cell(cell, ware) do
-    location = cell.location
-    url = location <> "/sys/firmware/current"
-    IO.write "cell: #{location} -> "
-    resp = HTTPotion.put(url, body: ware, headers: ["Content-Type": "application/x-firmware"], timeout: 120000)
-    case resp.status_code do
-      201 ->
-        IO.write "ok\n"
-      x ->
-        IO.write "UPDATE FAILED (ERROR #{x})\n"
-    end
+    cell.location
+    |> Path.join("/sys/firmware/current")
+    |> HTTPotion.put(body: ware, headers: ["Content-Type": "application/x-firmware"], timeout: 120000)
+    |> verify_status()
+    |> response("cell: #{cell.location} -> ")
+    |> IO.write()
   end
+
+  defp verify_status({:ok, %HTTPotion.Response{status_code: 201}}), do: "ok\n"
+  defp verify_status({:ok, %HTTPotion.Response{status_code: x}}), do: "UPDATE FAILED (ERROR #{x})\n"
+
+  defp response(message, prefix), do: "#{prefix} #{message}"
 end
