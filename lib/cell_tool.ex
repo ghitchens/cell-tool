@@ -6,7 +6,7 @@ defmodule CellTool do
 
   ## Configuration Example
 
-  Runtime configuration is possible by placing a file at `~/cell/cell.conf` with
+  Runtime configuration is possible by placing a file at `~/.cell/cell.conf` with
   the following format:
 
   ```bash
@@ -16,7 +16,7 @@ defmodule CellTool do
 
   # Services Doc location relative to base path
   # Default: "jrtp"
-  cell.services_path = "nemo"
+  cell.services_path = "cell"
   ```
 
   ## Examples
@@ -62,6 +62,7 @@ defmodule CellTool do
       {[], ["list", cells], []} -> Cmd.Discover.run(cells)
       #Provision
       {[], ["provision", cells, app_id], []} -> Cmd.Provision.run(cells, app_id)
+      {args, ["provision", cells, app_id], []} -> Cmd.Provision.run(cells, app_id, argv_to_dict(args[:options]))
       #Push
       {[], ["push", cells, fw], []} -> Cmd.Push.run(fw, cells)
       #Watch
@@ -89,5 +90,18 @@ defmodule CellTool do
   end
 
   # definition of aliases to be used with OptionParser
-  defp aliases, do: [h: :help, v: :version]
+  defp aliases, do: [h: :help, v: :version, o: :options]
+  
+  # captchrisd - utiltity for provision argument breakdown - REVIEW
+  defp argv_to_dict(args) do
+    args = String.split(args, ",")
+    {args, _} = Enum.flat_map_reduce(args, [], fn(x, acc) -> 
+      case String.split(x, "=") do
+        [k, v] -> {["#{k}": v], acc}
+        _ -> {:halt, acc}
+      end
+    end)
+    args
+  end
+  
 end

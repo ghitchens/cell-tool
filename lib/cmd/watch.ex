@@ -37,7 +37,7 @@ defmodule Cmd.Watch do
       String.to_integer(ip)
     end
     receive do
-      {:udp, socket, {_,_,_,n}, _port, msg} ->
+      {:udp, _rcv_socket, {_,_,_,n}, _port, msg} ->
           if ip == nil or n == ip do
             IO.write ".#{n}\t#{msg}"
             watch_mcast(socket, opts)
