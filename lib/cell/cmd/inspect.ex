@@ -38,8 +38,8 @@ defmodule Nerves.CLI.Cell.Cmd.Inspect do
   defp create_url(cell, nil), do: cell.location
   defp create_url(cell, p), do: cell.location <> p
 
-  defp verify_status({:ok, %HTTPotion.Response{status_code: 200, body: body}}), do: "ok\n#{body}\n\n"
-  defp verify_status({:ok, _}), do: "ERROR\n"
+  defp verify_status(%HTTPotion.Response{status_code: 200, body: body}), do: "ok\n#{body}\n\n"
+  defp verify_status(_), do: "ERROR\n"
 
   defp response(message, prefix), do: "#{prefix} #{message}"
 end
