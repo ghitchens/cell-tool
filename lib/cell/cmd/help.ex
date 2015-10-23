@@ -56,7 +56,7 @@ defmodule Nerves.CLI.Cell.Cmd.Help do
           test_cell
   """
 
-  @doc "Prints out help information using IO.write"
+  @doc "Prints out help information using `IO.write`"
   def run, do: IO.write @help
 
 end

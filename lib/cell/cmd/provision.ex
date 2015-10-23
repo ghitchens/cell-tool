@@ -1,11 +1,11 @@
 defmodule Nerves.CLI.Cell.Cmd.Provision do
 
   @moduledoc """
-  Provisions  a  box for  use,  assuming  the  device  is running  either  generic
-  firmware or firmware with an "open" update policy.
+  Provisions  a  box for  use,  assuming  the  device  is running  either
+  generic firmware or firmware with an "open" update policy.
 
-  The app_id is the application ID to install on the box.  A provisioning
-  configuration file <app_id>.exs must exist in ~/.cell/provision.
+  The app_id is the application ID to install on the box. A provisioning
+  configuration file `<app_id>.exs` must exist in `~/.cell/provision`.
   """
 
   @name         "lock"
@@ -17,7 +17,7 @@ defmodule Nerves.CLI.Cell.Cmd.Provision do
 
   alias Nerves.Cell.CLI.JRTP
   
-  @doc "Takes paramater(s) from Cmd.main to perform action"
+  @doc "Takes paramater(s) from `Cmd.main` to perform action"
   def run(cspec, app_id) do
     HTTPotion.start
     Finder.apply cspec, "Provisioning as '#{app_id}'", &(provision(&1, app_id))

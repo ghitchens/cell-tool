@@ -3,7 +3,7 @@ defmodule Nerves.CLI.Cell.Cmd.Push do
   Pushes the specified firmware bundle to a cell.
   """
 
-  @doc "Takes paramater(s) from Cmd.main to perform action"
+  @doc "Takes paramater(s) from `Cmd.main` to perform action"
   def run(wspec, cspec) do
     HTTPotion.start
     ware = File.read! wspec
