@@ -20,9 +20,9 @@ defmodule Nerves.CLI.Cell.Cmd.Denormalize do
     |> IO.write()
   end
 
-  defp verify_status({:ok, %HTTPotion.Response{status_code: 200}}), do: "ok\n"
-  defp verify_status({:ok, %HTTPotion.Response{status_code: 400}}), do: "already provisional\n"
-  defp verify_status({:ok, %HTTPotion.Response{status_code: x}}), do: "DENORMALIZATION FAILED (ERROR #{x})\n"
+  defp verify_status(%HTTPotion.Response{status_code: 200}), do: "ok\n"
+  defp verify_status(%HTTPotion.Response{status_code: 400}), do: "already provisional\n"
+  defp verify_status(%HTTPotion.Response{status_code: x}), do: "DENORMALIZATION FAILED (ERROR #{x})\n"
 
   defp response(message, prefix), do: "#{prefix} #{message}"
 end

@@ -19,8 +19,8 @@ defmodule Nerves.CLI.Cell.Cmd.Push do
     |> IO.write()
   end
 
-  defp verify_status({:ok, %HTTPotion.Response{status_code: 201}}), do: "ok\n"
-  defp verify_status({:ok, %HTTPotion.Response{status_code: x}}), do: "UPDATE FAILED (ERROR #{x})\n"
+  defp verify_status(%HTTPotion.Response{status_code: 201}), do: "ok\n"
+  defp verify_status(%HTTPotion.Response{status_code: x}), do: "UPDATE FAILED (ERROR #{x})\n"
 
   defp response(message, prefix), do: "#{prefix} #{message}"
 end

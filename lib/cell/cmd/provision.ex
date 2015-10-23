@@ -46,7 +46,7 @@ defmodule Nerves.CLI.Cell.Cmd.Provision do
     |> IO.write()
   end
 
-  defp verify_status({:ok, %HTTPotion.Response{status_code: 201}}), do: "ok\n"
-  defp verify_status({:ok, %HTTPotion.Response{status_code: 204}}), do: "ok\n"
-  defp verify_status({:ok, %HTTPotion.Response{status_code: x}}), do: "LOCK FAILED (ERROR #{x})\n"
+  defp verify_status(%HTTPotion.Response{status_code: 201}), do: "ok\n"
+  defp verify_status(%HTTPotion.Response{status_code: 204}), do: "ok\n"
+  defp verify_status(%HTTPotion.Response{status_code: x}), do: "LOCK FAILED (ERROR #{x})\n"
 end

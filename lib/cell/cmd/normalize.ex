@@ -21,9 +21,9 @@ defmodule Nerves.CLI.Cell.Cmd.Normalize do
     |> IO.write()
   end
 
-  defp verify_status({:ok, %HTTPotion.Response{status_code: 200}}), do: "ok\n"
-  defp verify_status({:ok, %HTTPotion.Response{status_code: 400}}), do: "already normal\n"
-  defp verify_status({:ok, %HTTPotion.Response{status_code: x}}), do: "NORMALIZATION FAILED (ERROR #{x})\n"
+  defp verify_status(%HTTPotion.Response{status_code: 200}), do: "ok\n"
+  defp verify_status(%HTTPotion.Response{status_code: 400}), do: "already normal\n"
+  defp verify_status(%HTTPotion.Response{status_code: x}), do: "NORMALIZATION FAILED (ERROR #{x})\n"
 
   defp response(message, prefix), do: "#{prefix} -> #{message}"
 end

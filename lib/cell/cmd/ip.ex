@@ -19,9 +19,9 @@ defmodule Nerves.CLI.Cell.Cmd.Ip do
     ~s({"ip": "#{ip}", "mask": "#{mask}", "router": "#{router}"})
   end
 
-  defp verify_status({:ok, %HTTPotion.Response{status_code: 200}}), do: "ok\n"
-  defp verify_status({:ok, %HTTPotion.Response{status_code: 400}}), do: "ERROR\n"
-  defp verify_status({:ok, %HTTPotion.Response{status_code: x}}), do: "FAILED (ERROR #{x})\n"
+  defp verify_status(%HTTPotion.Response{status_code: 200}), do: "ok\n"
+  defp verify_status(%HTTPotion.Response{status_code: 400}), do: "ERROR\n"
+  defp verify_status(%HTTPotion.Response{status_code: x}), do: "FAILED (ERROR #{x})\n"
 
   defp response(message, prefix), do: "#{prefix} #{message}"
 end
