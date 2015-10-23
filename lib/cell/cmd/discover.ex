@@ -1,7 +1,7 @@
 defmodule Nerves.CLI.Cell.Cmd.Discover do
   @moduledoc """
-  Discoveres cells on the LOcal network and displays key information such as
-  the last octet of their IP, serial number, device type, and firmware version.
+  Discoveres cells on the Local network and displays key information such as
+  the last octet of their IP, serial number, device type and firmware version.
   """
 
   alias Nerves.CLI.Cell.JRTP

@@ -3,15 +3,15 @@ defmodule Nerves.CLI.Cell.Cmd.Watch do
   Watches the Logging UDP stream of all cells or the specified cell. The output
   is prepended by the last octet of the IP address then the logging message.
 
-  UDP address: 224.0.0.224
-  Port: 9999
+  * *UDP address:* 224.0.0.224
+  * *Port:* 9999
   """
 
   @mcast_log_group {224, 0, 0, 224}
   @mcast_log_port 9999
 
   alias Nerves.CLI.Cell.Inet
-  
+
   @doc "Starts the watch on all cells"
   def run do
     {:ok, socket} = setup_socket

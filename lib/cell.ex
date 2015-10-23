@@ -1,13 +1,15 @@
 defmodule Nerves.CLI.Cell do
   @moduledoc """
-  A simple command line interface for managing cells built using modules from the [Cellulose](cellulose.io) projects.
+  A simple command line interface for managing cells built using modules from
+  the [Cellulose](http://cellulose.io) projects.
 
-  **Note:** All functions may not be usable with all cells. Since, all cells may not implement all modules offered by the Cellulose Project.
+  **Note:** All functions may not be usable with all cells. Since, all cells
+  may not implement all modules offered by the Cellulose Project.
 
   ## Configuration Example
 
-  Runtime configuration is possible by placing a file at `~/.cell/cell.conf` with
-  the following format:
+  Runtime configuration is possible by placing a file at `~/.cell/cell.conf`
+  with the following format:
 
   ```bash
   # Service Type for Cell tool to use in M-SEARCH
@@ -34,7 +36,7 @@ defmodule Nerves.CLI.Cell do
       cell: /jrtp/sys/firmware/current -> ok
   """
   alias Nerves.CLI.Cell.Cmd
-  
+
   @cell_tool_version Mix.Project.config[:version]
 
   @doc "Function that gets call when run as CLI"
@@ -92,7 +94,7 @@ defmodule Nerves.CLI.Cell do
 
   # definition of aliases to be used with OptionParser
   defp aliases, do: [h: :help, v: :version, o: :options]
-  
+
   # captchrisd - utiltity for provision argument breakdown - REVIEW
   defp argv_to_dict(args) do
     args = String.split(args, ",")
@@ -104,5 +106,5 @@ defmodule Nerves.CLI.Cell do
     end)
     args
   end
-  
+
 end

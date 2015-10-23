@@ -1,7 +1,7 @@
 defmodule Nerves.CLI.Cell.Cmd.Inspect do
   @moduledoc """
   Inspects a portion of the Hub tree provided by the cell through its JSON/HTTP
-  API. This does not provide as much detail as Hub.dump/0 in the Hub modules,
+  API. This does not provide as much detail as `Hub.dump/0` in the Hub modules,
   as only "public" key/value pairs are shown.
 
   ## Options
@@ -10,14 +10,14 @@ defmodule Nerves.CLI.Cell.Cmd.Inspect do
 
   ## Examples
 
-    iex> run(".189")
-    # would aquire the whole Hub tree
+      iex> run(".189")
+      # would aquire the whole Hub tree
 
-    iex> run(".189", "services")
-    # would aquire the subtree starting a /services
+      iex> run(".189", "services")
+      # would aquire the subtree starting a /services
   """
 
-  @doc "Takes paramater(s) from Cmd.main to perform action"
+  @doc "Takes paramater(s) from `Cmd.main` to perform action"
   def run(cspec, path \\ nil) do
     HTTPotion.start
     Finder.apply cspec, "Getting Hub (sub)tree ", &(get_services_doc(&1, path))

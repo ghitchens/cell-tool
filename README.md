@@ -1,21 +1,24 @@
 CELL
 ====
 
-A simple command line interface for managing cells built using modules from the [Cellulose](cellulose.io) projects.
+A simple command line interface for managing cells built using modules from the
+[Cellulose](cellulose.io) projects.
 
-**Note:** All functions may not be usable with all cells. Since, all cells may not implement all modules offered by the Cellulose Project.
+**Note:** All functions may not be usable with all cells. Since, all cells may
+not implement all modules offered by the Cellulose Project.
 
 ## Installation
 
-The mix.exs script installs the executable as as /usr/local/bin/cell.
+The `mix.exs` script installs the executable as as `/usr/local/bin/cell`.
 
-If your user has write access to /usr/local/bin, you can simply:
+If your user has write access to `/usr/local/bin`, you can simply:
 
 ```bash
 $ mix escript.build
 ```
 
-If this gives you permissions error, either grant yourself, group or user write permission access to /usr/local/bin, or add sudo before the command like this:
+If this gives you permissions error, either grant yourself, group or user write
+permission access to `/usr/local/bin`, or add `sudo` before the command like this:
 
 ```bash
 $ sudo mix escript.build
@@ -75,7 +78,7 @@ Options:
 
 ## Configuration
 
-Cell Tool may be configured at runtime by placing a .conf file at `~/.cell/cell.conf`
+Cell may be configured at runtime by placing a .conf file at `~/.cell/cell.conf`
 
 Currently only the SSDP Service Type may be specified in the `~/.cell/cell.conf`
 file.
@@ -83,14 +86,18 @@ file.
     # Service Type for Cell tool to use in M-SEARCH
     cell.ssdp_st = "urn:someorg-com:service:cell:1"
 
-By default Cell Tool will conduct it's M-SEARCH requests with the Service Type:
+By default Cell will conduct it's M-SEARCH requests with the Service Type:
 `urn:cellulose-io:service:cell:1`
 
 ## Wishlist
 
-    cell alias <cells> <alias>  			Make an alias for one or more cells
-    cell static <cell> <config>|clear			Set a static IP on a cell
+    cell alias <cells> <alias>                Make an alias for one or more cells
+    cell static <cell> <config>|clear         Set a static IP on a cell
 
 ## Contributing
 
-We appreciate any contribution to Cellulose Projects, so check out our [CONTRIBUTING.md](CONTRIBUTING.md) guide for more information. We usually keep a list of features and bugs [in the issue tracker](https://github.com/cellulose/ethernet/issues).
+We appreciate any contribution to Cellulose Projects, so check out our
+[CONTRIBUTING.md](CONTRIBUTING.md) guide for more information. We usually keep
+a list of features and bugs [in the issue tracker][issues]
+
+[issues]: https://github.com/cellulose/ethernet/issues
