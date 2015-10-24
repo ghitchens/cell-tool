@@ -5,6 +5,8 @@ defmodule Nerves.CLI.Cell.Cmd.Denormalize do
   accomplished by setting the firmware status to `provisional`
   """
 
+  alias Nerves.CLI.Cell.Finder
+
   @doc "Takes <cell> paramater from Cmd.main to perform action"
   def run(cspec) do
     HTTPotion.start
