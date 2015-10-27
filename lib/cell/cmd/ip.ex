@@ -1,6 +1,8 @@
 defmodule Nerves.CLI.Cell.Cmd.Ip do
   @moduledoc "Not yet implemented"
 
+  alias Nerves.CLI.Cell.Finder
+
   def run(cspec, ip, mask, router) do
     HTTPotion.start
     Finder.apply cspec, "Setting", &(setip(&1, ip, mask, router))

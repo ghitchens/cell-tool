@@ -17,6 +17,8 @@ defmodule Nerves.CLI.Cell.Cmd.Inspect do
       # would aquire the subtree starting a /services
   """
 
+  alias Nerves.CLI.Cell.Finder
+
   @doc "Takes paramater(s) from `Cmd.main` to perform action"
   def run(cspec, path \\ nil) do
     HTTPotion.start
