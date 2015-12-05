@@ -64,14 +64,18 @@ defmodule Nerves.CLI.Cell.SSDPClient do
 
   defp ssdp_st do
     path = Path.expand "~/.cell/cell.conf"
-    case Conform.Parse.file(path) do
-      {:error, _} -> @default_ssdp_st
-      {:ok, conf} ->
-        # Logger.info "conf: #{inspect conf}"
-        case :proplists.get_value(['cell','ssdp_st'], conf) do
-          :undefined -> @default_ssdp_st
-          st -> st
-        end
+    if File.exists?(path) do
+      case Conform.Parse.file(path) do
+        {:error, _} -> @default_ssdp_st
+        {:ok, conf} ->
+          # Logger.info "conf: #{inspect conf}"
+          case :proplists.get_value(['cell','ssdp_st'], conf) do
+            :undefined -> @default_ssdp_st
+            st -> st
+          end
+      end
+    else
+      @default_ssdp_st
     end
   end
 end

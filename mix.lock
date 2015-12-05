@@ -1,6 +1,6 @@
 %{"conform": {:hex, :conform, "0.17.0"},
-  "earmark": {:hex, :earmark, "0.1.18"},
-  "ex_doc": {:hex, :ex_doc, "0.10.0"},
+  "earmark": {:hex, :earmark, "0.1.19"},
+  "ex_doc": {:hex, :ex_doc, "0.11.1"},
   "exjsx": {:hex, :exjsx, "3.2.0"},
   "httpotion": {:hex, :httpotion, "2.1.0"},
   "ibrowse": {:git, "https://github.com/cmullaparthi/ibrowse.git", "5ee4a806611fcf25cc74155871571e9983a0d0fc", [ref: "5ee4a80"]},
