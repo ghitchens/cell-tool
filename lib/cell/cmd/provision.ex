@@ -15,8 +15,9 @@ defmodule Nerves.CLI.Cell.Cmd.Provision do
   @lock_timeout 15000
   @provision_dir "~/.cell/provision/"
 
-  alias Nerves.Cell.CLI.JRTP
-  
+  alias Nerves.CLI.Cell.JRTP
+  alias Nerves.CLI.Cell.Finder
+
   @doc "Takes paramater(s) from `Cmd.main` to perform action"
   def run(cspec, app_id) do
     HTTPotion.start

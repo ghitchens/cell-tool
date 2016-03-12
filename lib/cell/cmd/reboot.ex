@@ -1,6 +1,8 @@
 defmodule Nerves.CLI.Cell.Cmd.Reboot do
   @moduledoc "Reboots a cell"
 
+  alias Nerves.CLI.Cell.Finder
+
   @doc "Takes paramater(s) from `Cmd.main` to perform action"
   def run(cspec) do
     HTTPotion.start
