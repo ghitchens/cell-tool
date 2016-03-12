@@ -4,9 +4,9 @@ defmodule Nerves.CLI.Cell.SSDPClient do
   """
   require Logger
 
-  @discover_gather_time   2000    # wait up to 2 seconds for responses
+  @discover_gather_time   1100    # wait up to 1,1 second for responses
 
-  @default_ssdp_st "urn:nerves-io:service:cell:1"
+  @default_ssdp_st "urn:nerves-project-org:service:cell:1"
 
   @doc "listen for a bit after an msearch and see who we hear from"
   def discover do
@@ -59,19 +59,25 @@ defmodule Nerves.CLI.Cell.SSDPClient do
     "M-SEARCH * HTTP/1.1\r\n" <>
     "Host: 239.255.255.250:1900\r\n" <>
     "MAN: \"ssdp:discover\"\r\n" <>
-    "ST: #{ssdp_st}\r\nMX: 10\r\n\r\n"
+    "ST: #{ssdp_st}\r\nMX: 1\r\n\r\n"
+  #  "ST: ssdp:all\r\nMX: 1\r\n\r\n"
   end
 
   defp ssdp_st do
     path = Path.expand "~/.cell/cell.conf"
-    case Conform.Parse.file(path) do
-      {:error, _} -> @default_ssdp_st
-      {:ok, conf} ->
-        # Logger.info "conf: #{inspect conf}"
-        case :proplists.get_value(['cell','ssdp_st'], conf) do
-          :undefined -> @default_ssdp_st
-          st -> st
+    case File.exists?(path) do
+      false -> @default_ssdp_st
+      true ->
+        case Conform.Parse.file(path) do
+          {:error, _} -> @default_ssdp_st
+          {:ok, conf} ->
+            # Logger.info "conf: #{inspect conf}"
+            case :proplists.get_value(['cell','ssdp_st'], conf) do
+              :undefined -> @default_ssdp_st
+              st -> st
+            end
         end
     end
   end
+
 end

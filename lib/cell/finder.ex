@@ -7,23 +7,38 @@ defmodule Nerves.CLI.Cell.Finder do
   """
 
   alias Nerves.CLI.Cell.SSDPClient
-  
+  require Logger
+
   @default_service_path "jrtp"
 
-  def apply(cspec, title, func) do
-    if :erlang.is_binary(cspec) and String.length(cspec) > 5 do
-      cells = make_static_cell(cspec)
-    else
-      cells = discovered(cspec)
-    end
+  @doc """
+  Given a device specification `spec`, and a title, apply the function `func`
+  to each of the found devices.
+  """
+  def apply(spec, title, func) do
+    cells = cells_from_spec(spec)
     case Enum.count(cells) do
       0 -> nil
       n ->
         IO.write "#{title} #{n} cell(s)\n"
-        for {_, cell} <- cells do
-          func.(cell)
+        for {usn, cell} <- cells do
+          func.(Dict.merge(cell, usn: usn))
         end
     end
+  end
+
+  defp cells_from_spec(spec) do
+    if :erlang.is_binary(spec) and String.length(spec) > 5 do
+      make_static_cell(spec)
+    else
+      discovered(spec)
+    end
+  end
+
+  # returns liat
+  def discovered(filter_spec) do
+    filtered_discover(filter_spec)
+    |> display_cell_count(filter_spec)
   end
 
   # return a single cell with the specified location, because the user
@@ -32,8 +47,8 @@ defmodule Nerves.CLI.Cell.Finder do
   %{ "remote": %{ location: "http://#{cspec}/#{services_loc}", name: cspec }}
   end
 
-  def discovered(spec) do
-  cells = SSDPClient.discover |> spec(spec)
+  # displays count of cells, returns cells
+  defp display_cell_count(cells, spec) do
     n = Enum.count(cells)
     case spec do
       nil ->
@@ -44,14 +59,15 @@ defmodule Nerves.CLI.Cell.Finder do
     cells
   end
 
-  # filter the list of supplied cells filtered by the associated spec
-  def spec(cells, spec) do
-    Enum.filter(cells, &(meets_spec(&1, spec)))
+  # return a list of cells that meet the given filter specifications
+  defp filtered_discover(filter_spec) do
+    SSDPClient.discover
+    |> Enum.filter(&(meets_filter_spec(&1, filter_spec)))
   end
 
   # decide if a cell meets the spec.  "all" and nil both match all
   # cells.  For now, only the last octet can be used otherwise
-  defp meets_spec(cell, spec) do
+  defp meets_filter_spec(cell, spec) do
     {_key, info} = cell
     case spec do
       "all" -> true
@@ -65,8 +81,10 @@ defmodule Nerves.CLI.Cell.Finder do
   defp services_loc do
     conf_path = Path.expand "~/.cell/cell.conf"
     case Conform.Parse.file(conf_path) do
-      {:error, _} -> @default_service_path
+      {:error, _} ->
+        @default_service_path
       conf ->
+        Logger.info "conf= #{inspect conf}"
         case :proplists.get_value(['cell','services_path'], conf) do
           :undefined -> @default_service_path
           st -> st

@@ -6,44 +6,69 @@ defmodule Nerves.CLI.Cell.Cmd.Discover do
 
   alias Nerves.CLI.Cell.JRTP
   alias Nerves.CLI.Cell.Finder
+  alias Nerves.CLI.Cell.Inet
 
   @doc "Takes paramater(s) from Cmd.main to perform action"
   def run(spec, _opts \\ %{}) do
     HTTPotion.start
     Finder.apply spec, "NAME\tSERIAL#\t\tTYPE\tVERSION -",
-      &(IO.write fsr(&1)<>"\n")
+      &(IO.write format_status(&1)<>"\n")
   end
 
-  defp fsr(c) do
-    case JRTP.get_services(c) do
-      {:error, x} ->
-        ".#{c.name}\tError #{x} from #{inspect c}"
-      {:ok, svcs} ->
-        case svcs.root.description do
-          description when is_bitstring(description) -> # v2
-            sf = svcs.firmware
-            sn = svcs.root.serial_number
-            model = svcs.root.model
-            case sf[:info] do
-              nil ->
-                fv = "BROKEN"
-                fs = "BROKEN"
-              fi ->
-                fv = fi.version
-                fs = fi.status
-            end
-          srd -> # v1
-            fv = srd.firmware_version
-            fs = srd.firmware_status
-            sn = srd.serial_number
-            model = srd.device_id
-        end
-        case fs do
-          "normal" ->
-            "#{c.name}\t#{sn}\t#{model}\t#{fv}"
-          _fw_status ->
-            "#{c.name}\t#{sn}\t#{model}\t#{fv} (#{fs})"
+  defp format_status(service) do
+    case service[:location] do
+      nil ->
+        format_basic_status(service)
+      {location} ->
+        case JRTP.get_cell_services_resource(location) do
+          {:ok, services_resource} ->
+            format_extended_status(service, services_resource)
+          {:error, {:http, x}} ->
+            format_basic_status(service, "HTTP #{x}")
+          {:error, other} ->
+            format_basic_status(service, "ERROR: #{inspect other}")
         end
     end
   end
+
+  defp format_basic_status(cell, msg \\ "") do
+    ip = Inet.ntoa(cell[:ip])
+    name = cell[:name]
+    st = cell[:st]
+    usn = cell[:usn]
+    inspect(cell)
+    #"#{ip}\t#{name}\t#{usn}\t#{st}\t#{msg}"
+  end
+
+  # needs to be taken out and shot - gh 3-2016
+  defp format_extended_status(cell, resource) do
+    case resource.root.description do
+      description when is_bitstring(description) -> # v2
+        sf = resource.firmware
+        sn = resource.root.serial_number
+        model = resource.root.model
+        case sf[:info] do
+          nil ->
+            fv = "BROKEN"
+            fs = "BROKEN"
+          fi ->
+            fv = fi.version
+            fs = fi.status
+        end
+      srd -> # v1
+        fv = srd.firmware_version
+        fs = srd.firmware_status
+        sn = srd.serial_number
+        model = srd.device_id
+    end
+
+    ip = Inet.ntoa(cell[:ip])
+    case fs do
+      "normal" ->
+        "#{ip}\t#{cell.name}\t#{sn}\t#{model}\t#{fv}"
+      _fw_status ->
+        "#{ip}\t#{cell.name}\t#{sn}\t#{model}\t#{fv} (#{fs})"
+    end
+  end
+
 end

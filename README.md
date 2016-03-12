@@ -1,11 +1,7 @@
 CELL
 ====
 
-A simple command line interface for managing cells built using modules from the
-[Cellulose](cellulose.io) projects.
-
-**Note:** All functions may not be usable with all cells. Since, all cells may
-not implement all modules offered by the Cellulose Project.
+A simple command line interface for discovering and managing nerves devices that support the common discovery, firmware, and logging conventions (cells).
 
 ## Installation
 

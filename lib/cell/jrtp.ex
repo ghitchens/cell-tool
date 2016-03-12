@@ -1,19 +1,12 @@
 defmodule Nerves.CLI.Cell.JRTP do
   @moduledoc """
-  Simple decoder of services document provided by cell
+  Decoder of device information resource provided by the cell
   """
 
   require Logger
 
-  @doc "gets cells services document and returns `{:ok, services}`"
-  def get_services(cell) do
-    # Logger.info "#{inspect cell}"
-    cell[:location]
-    |> cell_location()
-  end
-
-  defp cell_location(nil), do: {:error, :no_location}
-  defp cell_location(location) do
+  @doc "gets a cell services JSON resource at location"
+  def get_cell_services_resource(location) do
     location
     |> Path.join("services")
     |> HTTPotion.get()
@@ -25,6 +18,6 @@ defmodule Nerves.CLI.Cell.JRTP do
   end
 
   defp verify_status(%HTTPotion.Response{status_code: x}) do
-    raise "services request failed with HTTP status code #{x}"
+    {:error, {:http, x}}
   end
 end
