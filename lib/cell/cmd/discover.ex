@@ -11,7 +11,7 @@ defmodule Nerves.CLI.Cell.Cmd.Discover do
   @doc "Takes paramater(s) from Cmd.main to perform action"
   def run(spec, _opts \\ %{}) do
     HTTPotion.start
-    Finder.apply spec, "NAME\tSERIAL#\t\tTYPE\tVERSION -",
+    Finder.apply spec, "NAME\tIP\t\tUSN\t",
       &(IO.write format_status(&1)<>"\n")
   end
 
@@ -36,8 +36,7 @@ defmodule Nerves.CLI.Cell.Cmd.Discover do
     name = cell[:name]
     st = cell[:st]
     usn = cell[:usn]
-    inspect(cell)
-    #"#{ip}\t#{name}\t#{usn}\t#{st}\t#{msg}"
+    "#{name}\t#{ip}\t#{usn}\t#{msg}"
   end
 
   # needs to be taken out and shot - gh 3-2016
