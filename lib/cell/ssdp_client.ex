@@ -6,7 +6,7 @@ defmodule Nerves.CLI.Cell.SSDPClient do
 
   @discover_gather_time   1100    # wait up to 1,1 second for responses
 
-  @default_ssdp_st "urn:nerves-project-org:service:cell:1"
+  @default_ssdp_st "nerves-project-org:service:cell:1"
 
   @doc "listen for a bit after an msearch and see who we hear from"
   def discover do

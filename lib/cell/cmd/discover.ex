@@ -1,12 +1,14 @@
 defmodule Nerves.CLI.Cell.Cmd.Discover do
   @moduledoc """
-  Discoveres cells on the Local network and displays key information such as
+  Discovers cells on the Local network and displays key information such as
   the last octet of their IP, serial number, device type and firmware version.
   """
 
   alias Nerves.CLI.Cell.JRTP
   alias Nerves.CLI.Cell.Finder
   alias Nerves.CLI.Cell.Inet
+
+  @nerves_st "nerves-project-org:service:cell:1"
 
   @doc "Takes paramater(s) from Cmd.main to perform action"
   def run(spec, _opts \\ %{}) do
@@ -15,11 +17,15 @@ defmodule Nerves.CLI.Cell.Cmd.Discover do
       &(IO.write format_status(&1)<>"\n")
   end
 
+  defp format_status(service = %{st: @nerves_st}) do
+    format_basic_status(service, service[:cellid])  # REVIEW cellid? cell_id?  somethine else?
+  end
+
   defp format_status(service) do
     case service[:location] do
       nil ->
         format_basic_status(service)
-      {location} ->
+      location ->
         case JRTP.get_cell_services_resource(location) do
           {:ok, services_resource} ->
             format_extended_status(service, services_resource)

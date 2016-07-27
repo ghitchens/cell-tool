@@ -23,12 +23,10 @@ defmodule Nerves.CLI.Cell.Mixfile do
   end
 
   defp deps do
-    [{:exjsx, "~> 3.2.0" },
-     {:ibrowse, github: "cmullaparthi/ibrowse", ref: "5ee4a80"},
-     {:httpotion, "~> 2.1"},
+    [{:exjsx, "~> 3.2" },
+     {:httpotion, "~> 3.0"},
      {:conform, "~> 0.17"},
-     {:earmark, "~> 0.1", only: [:dev, :docs]},
-     {:ex_doc, "~> 0.8", only: [:dev, :docs]}]
+     {:ex_doc, "~> 0.13", only: [:dev, :docs]}]
   end
 
   def package do
