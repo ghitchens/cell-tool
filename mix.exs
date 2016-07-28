@@ -2,11 +2,13 @@ defmodule Nerves.CLI.Cell.Mixfile do
 
   use Mix.Project
 
+  @version "0.2.3"
+
   def project do
     [app: :cell,
      description: "Utility for managing nerves devices",
      escript: [main_module: Nerves.CLI.Cell, name: "cell", path: "/usr/local/bin/cell"],
-     version: version,
+     version: @version,
      elixir: "~> 1.0",
      deps: deps,
      # Hex
@@ -15,7 +17,7 @@ defmodule Nerves.CLI.Cell.Mixfile do
      name: "Cell",
      docs: [main: Nerves.CLI.Cell,
             source_url: "https://github.com/nerves-project/cell-tool",
-            extras: ["README.md", "CONTRIBUTING.md"]]]
+            extras: ["README.md"]]]
   end
 
   def application do
@@ -30,15 +32,9 @@ defmodule Nerves.CLI.Cell.Mixfile do
   end
 
   def package do
-    [maintainers: ["Garth Hitchens"],
-     licenses: ["MIT"],
-     links: %{"GitHub" => "https://github.com/nerves-project/cell-tool"}]
+    [ maintainers: ["Garth Hitchens"],
+      licenses: ["Apache-2.0"],
+      links: %{"GitHub" => "https://github.com/nerves-project/cell-tool"} ]
   end
 
-  defp version do
-    case File.read("VERSION") do
-      {:ok, ver} -> String.strip ver
-      _ -> "0.0.0-dev"
-    end
-  end
 end
