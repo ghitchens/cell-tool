@@ -16,7 +16,7 @@ defmodule Nerves.CLI.Cell.Finder do
   to each of the found devices.
   """
   def apply(spec, title, func) do
-    cells = cells_from_spec(spec)
+    cells(spec)
     case Enum.count(cells) do
       0 -> nil
       n ->
@@ -27,7 +27,11 @@ defmodule Nerves.CLI.Cell.Finder do
     end
   end
 
-  defp cells_from_spec(spec) do
+  @doc """
+  Attempt discovery of devices matching `cell_spec`, returning a list.
+  """
+  @spec discover(any) :: list
+  def discover(spec) do
     if :erlang.is_binary(spec) and String.length(spec) > 5 do
       make_static_cell(spec)
     else

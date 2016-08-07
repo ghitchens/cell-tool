@@ -22,7 +22,7 @@ defmodule Nerves.CLI.Cell.Cmd.Inspect do
   @doc "Takes paramater(s) from `Cmd.main` to perform action"
   def run(cspec, path \\ nil) do
     HTTPotion.start
-    Finder.apply cspec, "Getting Hub (sub)tree ", &(get_services_doc(&1, path))
+    table cspec, "Getting Hub (sub)tree ", &(get_services_doc(&1, path))
   end
 
   defp get_services_doc(cell, path) do

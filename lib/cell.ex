@@ -1,11 +1,11 @@
 defmodule Nerves.CLI.Cell do
   @moduledoc """
-  A simple command line interface for managing cells built using modules from
-  the [Cellulose](http://cellulose.io) projects.
-
-  **Note:** All functions may not be usable with all cells. Since, all cells
-  may not implement all modules offered by the Cellulose Project.
-
+  A CLI for managing Nerves devices that implement the "Cell" protocol set.  For 
+  more information see nerves_cell.
+  
+  Because not all cells implement all optional Cell features, not all functions
+  may be usable with all cells.
+  
   ## Configuration Example
 
   Runtime configuration is possible by placing a file at `~/.cell/cell.conf`
