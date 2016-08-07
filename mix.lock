@@ -5,4 +5,6 @@
   "httpotion": {:hex, :httpotion, "3.0.0", "4ce0af28f4254bdd0457d0fe065a83787751e0a5b5f5d27030948253be38df5c", [:mix], [{:ibrowse, "~> 4.2", [hex: :ibrowse, optional: false]}]},
   "ibrowse": {:hex, :ibrowse, "4.2.2", "b32b5bafcc77b7277eff030ed32e1acc3f610c64e9f6aea19822abcadf681b4b", [:rebar3], []},
   "jsx": {:hex, :jsx, "2.6.2", "213721e058da0587a4bce3cc8a00ff6684ced229c8f9223245c6ff2c88fbaa5a", [:mix, :rebar], []},
-  "neotoma": {:hex, :neotoma, "1.7.3", "d8bd5404b73273989946e4f4f6d529e5c2088f5fa1ca790b4dbe81f4be408e61", [:rebar], []}}
+  "neotoma": {:hex, :neotoma, "1.7.3", "d8bd5404b73273989946e4f4f6d529e5c2088f5fa1ca790b4dbe81f4be408e61", [:rebar], []},
+  "nerves_ssdp_client": {:hex, :nerves_ssdp_client, "0.1.3", "b09dc7433b2536399885a5f0fcd1fb58283115b075f9485f86fa713547d404dc", [:mix], []},
+  "table_rex": {:hex, :table_rex, "0.8.1", "56bcc4cbef5f59f23b66d27890da7a2bc6d35e0cf6cce665c034bcf8a830f709", [:mix], []}}

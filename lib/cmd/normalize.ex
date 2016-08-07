@@ -11,7 +11,7 @@ defmodule Nerves.CLI.Cell.Cmd.Normalize do
   @doc "Takes paramater(s) from `Cmd.main` to perform action"
   def run(cspec) do
     HTTPotion.start
-    Finder.apply cspec, "Normalizing", &(normalize(&1))
+    table cspec, "Normalizing", &(normalize(&1))
   end
 
   defp normalize(cell) do

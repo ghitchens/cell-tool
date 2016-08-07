@@ -7,16 +7,19 @@ defmodule Nerves.CLI.Cell.Cmd.Discover do
   alias Nerves.CLI.Cell.JRTP
   alias Nerves.CLI.Cell.Finder
   alias Nerves.CLI.Cell.Inet
+  alias Nerves.CLI.Cell.Render
 
   # HACK: this duplicates configuration elsewhere in order to choose format
   # would be better to abstract out somehwere else.
   @nerves_st "urn:nerves-project-org:service:cell:1"
 
-  @doc "Takes paramater(s) from Cmd.main to perform action"
+  @doc false
   def run(spec, _opts \\ %{}) do
-    HTTPotion.start
-    Finder.apply spec, "NAME\tIP\t\tUSN\t",
-      &(IO.write format_status(&1)<>"\n")
+#    HTTPotion.start
+    spec
+    |> Finder.discover
+    |> Render.summary "Found"
+    |> Render.table [:name, :ip, :usn]
   end
 
   defp format_status(service = %{st: @nerves_st}) do

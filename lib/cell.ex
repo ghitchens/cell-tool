@@ -1,10 +1,10 @@
 defmodule Nerves.CLI.Cell do
   @moduledoc """
-  A simple command line interface for managing cells built using modules from
-  the [Cellulose](http://cellulose.io) projects.
+  A CLI for managing Nerves devices that implement the "Cell" protocol set.  For
+  more information see nerves_cell.
 
-  **Note:** All functions may not be usable with all cells. Since, all cells
-  may not implement all modules offered by the Cellulose Project.
+  Because not all cells implement all optional Cell features, not all functions
+  may be usable with all cells.
 
   ## Configuration Example
 
@@ -36,19 +36,54 @@ defmodule Nerves.CLI.Cell do
       cell: /jrtp/sys/firmware/current -> ok
   """
   alias Nerves.CLI.Cell.Cmd
+  require Logger
 
   @cell_tool_version Mix.Project.config[:version]
+  @default_st "urn:nerves-project-org:service:cell:1"
+  @config_file "~/.cell/cell.conf"
+  @default_context [ cmd: ["list"],
+                     st: @default_st ]
 
-  @doc "Function that gets call when run as CLI"
+  @doc false
+  # Setup configuration, parse arguments, invoke command, and print results, theading
+  # a context all the way through each fucntion until command is invoked.
   def main(args) do
-    args
-    |> parse_args
+    @default_context
+    |> parse_config_file(@config_file)
+    |> parse_args(args)
+    |> invoke_command
+    |> IO.puts
   end
+
+  # merge config file in with context
+  defp parse_config_file(context, config_file) do
+    conf_path = Path.expand config_file
+    case Conform.Parse.file(conf_path) do
+      {:error, _} -> context
+      {:ok, conf} ->
+        case :proplists.get_value(['cell'], conf) do
+          :undefined -> context
+          cell_config -> Keyword.merge(context, cell_config)
+        end
+    end
+  end
+
+  # parse commands and options out of argsa nd merge with context
+  defp parse_args(context, args) do
+    stuff = OptionParser.parse args, [aliases: aliases]
+    Logger.info inspect(stuff)
+    {options, cmds, _other} = stuff
+    context
+  end
+
+  # invoke appropriate command with the given context
+  defp invoke_command(context) do
+    inspect(context)
+  end
+
 
   # Parses the argument list and calls the appropirate module
   defp parse_args(args) do
-    options = OptionParser.parse args, [aliases: aliases]
-
     case options do
       #Normalize
       {[], ["normal"], []} -> Cmd.Normalize.run(nil)
@@ -91,6 +126,8 @@ defmodule Nerves.CLI.Cell do
         Cmd.Help.run
     end
   end
+
+
 
   # definition of aliases to be used with OptionParser
   defp aliases, do: [h: :help, v: :version, o: :options]

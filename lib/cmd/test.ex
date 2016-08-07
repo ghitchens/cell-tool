@@ -5,7 +5,7 @@ defmodule Nerves.CLI.Cell.Cmd.Test do
 
   def run(cspec) do
     HTTPotion.start
-    Finder.apply cspec, "Testing", &(test(&1))
+    table cspec, "Testing", &(test(&1))
   end
 
   defp test(cell) do

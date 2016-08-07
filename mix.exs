@@ -2,12 +2,14 @@ defmodule Nerves.CLI.Cell.Mixfile do
 
   use Mix.Project
 
-  @version "0.2.3"
+  @version "0.2.4-dev"
 
   def project do
     [app: :cell,
      description: "Utility for managing nerves devices",
-     escript: [main_module: Nerves.CLI.Cell, name: "cell", path: "/usr/local/bin/cell"],
+     escript: [main_module: Nerves.CLI.Cell,
+               name: "cell",
+               path: "/usr/local/bin/cell"],
      version: @version,
      elixir: "~> 1.0",
      deps: deps,
@@ -21,13 +23,15 @@ defmodule Nerves.CLI.Cell.Mixfile do
   end
 
   def application do
-    [applications: [:logger]]
+    [applications: [:logger, :table_rex]]
   end
 
   defp deps do
     [{:exjsx, "~> 3.2" },
      {:httpotion, "~> 3.0"},
+     {:table_rex, "~> 0.8.1"},
      {:conform, "~> 0.17"},
+     {:nerves_ssdp_client, "~> 0.1"},
      {:ex_doc, "~> 0.13", only: [:dev, :docs]}]
   end
 
