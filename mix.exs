@@ -31,6 +31,7 @@ defmodule Nerves.CLI.Cell.Mixfile do
      {:httpotion, "~> 3.0"},
      {:table_rex, "~> 0.8.1"},
      {:conform, "~> 0.17"},
+     {:nerves_ssdp_client, "~> 0.1"},
      {:ex_doc, "~> 0.13", only: [:dev, :docs]}]
   end
 

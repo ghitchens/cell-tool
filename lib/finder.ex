@@ -1,22 +1,20 @@
 defmodule Nerves.CLI.Cell.Finder do
-
   @moduledoc """
-  find cells matching cspec
-  then put title with number of cells
-  then run func with each cell as param
+  Finds cells based on a cell query specification
   """
 
-  alias Nerves.CLI.Cell.SSDPClient
+  alias Nerves.SSDPClient
   require Logger
 
   @default_service_path "jrtp"
+  @default_service_type "urn:nerves-project-org:service:cell:1"
 
   @doc """
   Given a device specification `spec`, and a title, apply the function `func`
   to each of the found devices.
   """
   def apply(spec, title, func) do
-    cells(spec)
+    cells = discover(spec)
     case Enum.count(cells) do
       0 -> nil
       n ->
@@ -28,7 +26,9 @@ defmodule Nerves.CLI.Cell.Finder do
   end
 
   @doc """
-  Attempt discovery of devices matching `cell_spec`, returning a list.
+  Attempt discovery of devices matching `cell_spec`, returning an enumerable
+  key/value list, with the key being the cell id, and all other values being
+  attributes of the cell
   """
   @spec discover(any) :: list
   def discover(spec) do
@@ -42,31 +42,19 @@ defmodule Nerves.CLI.Cell.Finder do
   # returns liat
   def discovered(filter_spec) do
     filtered_discover(filter_spec)
-    |> display_cell_count(filter_spec)
   end
 
   # return a single cell with the specified location, because the user
   # asked for a specific cell in ip:port form.
   defp make_static_cell(cspec) do
-  %{ "remote": %{ location: "http://#{cspec}/#{services_loc}", name: cspec }}
-  end
-
-  # displays count of cells, returns cells
-  defp display_cell_count(cells, spec) do
-    n = Enum.count(cells)
-    case spec do
-      nil ->
-        IO.write "#{n} cells found\n"
-      _ ->
-        IO.write "#{n} cells found matching \"#{spec}\"\n"
-    end
-    cells
+#  %{ "remote": %{ location: "http://#{cspec}/#{services_loc}", name: cspec }}
   end
 
   # return a list of cells that meet the given filter specifications
-  defp filtered_discover(filter_spec) do
-    SSDPClient.discover
-    |> Enum.filter(&(meets_filter_spec(&1, filter_spec)))
+  defp filtered_discover(context) do
+    [ target: context[:st] ]
+    |> SSDPClient.discover
+    |> Enum.filter(&(meets_filter_spec(&1, context)))
   end
 
   # decide if a cell meets the spec.  "all" and nil both match all
@@ -80,19 +68,4 @@ defmodule Nerves.CLI.Cell.Finder do
     end
   end
 
-  # Determines the services location path on a static cell using
-  # config file if possible or using default
-  defp services_loc do
-    conf_path = Path.expand "~/.cell/cell.conf"
-    case Conform.Parse.file(conf_path) do
-      {:error, _} ->
-        @default_service_path
-      conf ->
-        Logger.info "conf= #{inspect conf}"
-        case :proplists.get_value(['cell','services_path'], conf) do
-          :undefined -> @default_service_path
-          st -> st
-        end
-    end
-  end
 end
