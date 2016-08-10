@@ -6,7 +6,7 @@ defmodule Nerves.CLI.Cell.Cmd.Reboot do
   @doc "Takes paramater(s) from `Cmd.main` to perform action"
   def run(cspec) do
     HTTPotion.start
-    table cspec, "Rebooting ", &(enable_reboot(&1))
+    Finder.apply cspec, "Rebooting ", &(enable_reboot(&1))
   end
 
   defp enable_reboot(cell) do

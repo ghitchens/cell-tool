@@ -9,7 +9,7 @@ defmodule Nerves.CLI.Cell.Cmd.Push do
   def run(wspec, cspec) do
     HTTPotion.start
     ware = File.read! wspec
-    table cspec, "Pushing ''#{wspec}' to", &(push_to_cell(&1, ware))
+    Finder.apply cspec, "Pushing ''#{wspec}' to", &(push_to_cell(&1, ware))
   end
 
   defp push_to_cell(cell, ware) do

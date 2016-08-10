@@ -21,7 +21,7 @@ defmodule Nerves.CLI.Cell.Cmd.Provision do
   @doc "Takes paramater(s) from `Cmd.main` to perform action"
   def run(cspec, app_id) do
     HTTPotion.start
-    table cspec, "Provisioning as '#{app_id}'", &(provision(&1, app_id))
+    Finder.apply cspec, "Provisioning as '#{app_id}'", &(provision(&1, app_id))
   end
 
   defp provision(cell, app_id) do

@@ -1,4 +1,4 @@
-defmodule Nerves.CLI.Cell.Cmd.Discover do
+defmodule Nerves.Cell.CLI.Cmd.Discover do
   @moduledoc """
   Discovers cells on the Local network and displays key information such as
   the last octet of their IP, serial number, device type and firmware version.
@@ -18,8 +18,8 @@ defmodule Nerves.CLI.Cell.Cmd.Discover do
 #    HTTPotion.start
     spec
     |> Finder.discover
-    |> Render.summary "Found"
-    |> Render.table [:name, :ip, :usn]
+    |> Render.summary("Found")
+    |> Render.table([:name, :ip, :usn])
   end
 
   defp format_status(service = %{st: @nerves_st}) do

@@ -10,7 +10,7 @@ defmodule Nerves.CLI.Cell.Cmd.Denormalize do
   @doc "Takes <cell> paramater from Cmd.main to perform action"
   def run(cspec) do
     HTTPotion.start
-    table cspec, "Denormalizing", &(normalize(&1))
+    Filer.apply cspec, "Denormalizing", &(normalize(&1))
   end
 
   defp normalize(cell) do

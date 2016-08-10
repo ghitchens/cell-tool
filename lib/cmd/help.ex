@@ -1,4 +1,4 @@
-defmodule Nerves.CLI.Cell.Cmd.Help do
+defmodule Nerves.Cell.CLI.Cmd.Help do
   @moduledoc """
   Provides help and usage of the cell tool
   """
@@ -57,6 +57,6 @@ defmodule Nerves.CLI.Cell.Cmd.Help do
   """
 
   @doc "Prints out help information using `IO.write`"
-  def run, do: IO.write @help
+  def run(context), do: @help
 
 end

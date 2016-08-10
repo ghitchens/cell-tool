@@ -5,13 +5,14 @@ defmodule Nerves.CLI.Cell.Cmd.Ip do
 
   def run(cspec, ip, mask, router) do
     HTTPotion.start
-    table Finder.discover
-    |> Render.declare spec, "Setting"
-    |> Enum.map &(&1 |> set_ip(ip, mask, router))
-    |> Render.tabulate [:name, :ip, :usn, :result]
+    # Finder.discover
+    #
+    # |> Render.declare(spec, "Setting"
+    # |> Enum.map &(&1 |> set_ip(ip, mask, router))
+    # |> Render.tabulate [:name, :ip, :usn, :result]
   end
 
-  @json_ct_hdr = ["Content-Type": "application/json"]
+  @json_ct_hdr ["Content-Type": "application/json"]
   # attempt to set IP of a cell, return a modified cell with result column
   defp set_ip(cell, ip, mask, router) do
     Dict.merge cell,

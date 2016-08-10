@@ -1,13 +1,13 @@
-defmodule Nerves.CLI.Cell.Mixfile do
+defmodule Nerves.Cell.CLI.Mixfile do
 
   use Mix.Project
 
-  @version "0.2.4-dev"
+  @version "0.3.0-dev"
 
   def project do
     [app: :cell,
      description: "Utility for managing nerves devices",
-     escript: [main_module: Nerves.CLI.Cell,
+     escript: [main_module: Nerves.Cell.CLI,
                name: "cell",
                path: "/usr/local/bin/cell"],
      version: @version,
@@ -17,7 +17,7 @@ defmodule Nerves.CLI.Cell.Mixfile do
      package: package,
      # ExDoc
      name: "Cell",
-     docs: [main: Nerves.CLI.Cell,
+     docs: [main: Nerves.Cell.CLI,
             source_url: "https://github.com/nerves-project/cell-tool",
             extras: ["README.md"]]]
   end
