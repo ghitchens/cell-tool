@@ -19,19 +19,6 @@ defmodule Nerves.CLI.Cell.Render do
   @type column_type :: atom
   @type column_spec :: atom | {atom, column_type}
 
-  @doc """
-  Writes a summary of number of matched cells and action being taken.
-
-  Returns unmodified cells enumerable (for ease of pipelining)
-  """
-  @spec summary(Enumerable.t, String.t) :: String.t
-  def summary(cells, verb) do
-    case Enum.count(cells) do
-      0 -> "Discovered no matching cells"
-      1 -> "#{verb} one cell"
-      n -> "#{verb} #{n} cells"
-    end
-  end
 
   @doc """
   Writes tabulated output about cells
@@ -45,18 +32,31 @@ defmodule Nerves.CLI.Cell.Render do
 
   Returns unmodified cells enumerable (for ease of pipelining)
   """
-  @spec table([map], list, String.t | nil) :: String.t
-  def table(cells, column_specs \\ @default_column_specs, title \\ nil)
+  @spec table(map, list, String.t | nil) :: String.t
+  def table(context, column_specs \\ @default_fields, title \\ nil)
   def table([], _, _), do: []
-  def table(cells, column_specs, title) do
+  def table(context, column_specs, title) do
     headers =
       column_specs
       |> Nerves.CLI.Cell.Render.HeaderFormatters.headers
-    cells
+    context.cells
     |> Enum.map(&(build_row(&1, column_specs)))
     |> Table.new(headers, title)
-    |> Table.render!(vertical_style: :off, header_separator_symbol: "-")
+    |> Table.render!() #vertical_style: :off, header_separator_symbol: "-")
+    |> IO.write
+    context
   end
+
+  # #Returns an appropriate table title
+  # @spec table_title(map) :: String.t
+  # defp table_title(context) do
+  #   "\n #{context.cmd}: " <>
+  #   case Enum.count(context.cells) do
+  #     0 -> "no matching cells"
+  #     1 -> "1 cell"
+  #     n -> "#{n} cells"
+  #   end
+  # end
 
   @spec build_row(map, [column_spec]) :: [String.t]
   defp build_row(cell, column_specs) do
@@ -70,6 +70,8 @@ defmodule Nerves.CLI.Cell.Render do
   defp build_column(cell, {k, type}) when is_atom(k) do
     ColumnFormatters.column(type, cell[k])
   end
+
+
 
   defmodule ColumnFormatters do
 

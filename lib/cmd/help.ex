@@ -1,24 +1,18 @@
 defmodule Nerves.Cell.CLI.Cmd.Help do
-  @moduledoc """
-  Provides help and usage of the cell tool
-  """
+  @moduledoc false
 
   @help """
 
-  cell - discover, update, and debug cellulose cells
+  cell - discover, update, and debug nerves cells
 
-  cell list [<cells>]               list found cells (alias for discover for now)
-  cell discover [<cells>]           find cells using SSDP on the LAN
+  cell list [<cells>]               Summarize cells on a local network
+  cell push <cells> <firmware>      Push specific firmware to a cell
   cell watch [<cells>]              watch multicast debug log of one or more cells
-  cell provision <cells> <app_id>   provisions a cell to the specified type
-  cell push <cells> <ware>          push specific firmware to one or more cells
-  cell inspect -<cells> [<path>]    inspect a part of the Hub path
-  cell normal[ize] [<cells>]        make provisional firmware normal
-  cell denormal[ize] <cells>        make normal firmwae provisional
   cell reboot <cells>               reboot a cell
+  cell info <cell>                  Read extended information about a cell
+
   cell [--version]                  show version for this program
   cell [--help]                     shows this help message
-
 
 
   Options:
@@ -56,7 +50,8 @@ defmodule Nerves.Cell.CLI.Cmd.Help do
           test_cell
   """
 
-  @doc "Prints out help information using `IO.write`"
-  def run(context), do: @help
+  def run(context) do
+    IO.write @help
+  end
 
 end
