@@ -35,6 +35,10 @@ defmodule Nerves.CLI.Cell.Render do
   @spec table(map, list, String.t | nil) :: String.t
   def table(context, column_specs \\ @default_fields, title \\ nil)
   def table([], _, _), do: []
+  def table(%{cells: []}=context, _, _) do
+    IO.puts "No matching cells"
+    context
+  end
   def table(context, column_specs, title) do
     headers =
       column_specs
@@ -70,7 +74,6 @@ defmodule Nerves.CLI.Cell.Render do
   defp build_column(cell, {k, type}) when is_atom(k) do
     ColumnFormatters.column(type, cell[k])
   end
-
 
 
   defmodule ColumnFormatters do

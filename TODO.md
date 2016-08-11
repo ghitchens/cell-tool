@@ -1,9 +1,15 @@
-Are lists of cells (discovered) actually lists, or maps?
+# TODO
 
-lists are useful because they can be sorted
-maps make sense for cell attributes (no sort implied)
+## Architectural Issues
 
 
-# deprecated functionality
+
+## Next
+
+- cell shell
+
+# deprecated
 
 - make_static_cell
+
+
