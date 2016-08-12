@@ -1,4 +1,4 @@
-defmodule Nerves.CLI.Cell.Render do
+defmodule Nerves.Cell.CLI.Render do
   @moduledoc """
   Functions to render and format output of CLI commands
 
@@ -42,7 +42,7 @@ defmodule Nerves.CLI.Cell.Render do
   def table(context, column_specs, title) do
     headers =
       column_specs
-      |> Nerves.CLI.Cell.Render.HeaderFormatters.headers
+      |> Nerves.Cell.CLI.Render.HeaderFormatters.headers
     context.cells
     |> Enum.map(&(build_row(&1, column_specs)))
     |> Table.new(headers, title)
@@ -75,7 +75,6 @@ defmodule Nerves.CLI.Cell.Render do
     ColumnFormatters.column(type, cell[k])
   end
 
-
   defmodule ColumnFormatters do
 
     @type column_type :: atom
@@ -105,7 +104,7 @@ defmodule Nerves.CLI.Cell.Render do
     end
 
     # given a table format the header (for now)
-    defp header_from_spec({k,v}) when is_atom(k), do: to_string(k)
+    defp header_from_spec({k,_v}) when is_atom(k), do: to_string(k)
     defp header_from_spec(a) when is_atom(a), do: to_string(a)
   end
 

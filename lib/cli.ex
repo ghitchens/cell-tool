@@ -49,7 +49,11 @@ defmodule Nerves.Cell.CLI do
   }
 
   @default_context %{
-    cmd: "", args: [], opts: [], st: @default_st
+    cmd: "", 
+    args: [], 
+    opts: [], 
+    filters: [], 
+    st: @default_st
   }
 
   @cmd_aliases %{
@@ -134,7 +138,7 @@ defmodule Nerves.Cell.CLI do
     Enum.reduce context[:opts], context, &process_option/2
   end
 
-  defp process_option({:"ssdp-type", service_type}, context) do
+  defp process_option({:type, service_type}, context) do
     case @service_type_map[service_type] do
       nil ->
         IO.puts "unknown service type: #{service_type}"

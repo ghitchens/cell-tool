@@ -1,4 +1,4 @@
-defmodule Nerves.CLI.Cell.Inet do
+defmodule Nerves.Cell.CLI.Inet do
 
   @doc """
   Parses an IP address (given as tuple) and returns an IPv4 or IPv6 address string.

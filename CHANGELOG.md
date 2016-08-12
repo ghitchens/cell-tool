@@ -1,6 +1,12 @@
 ## Changelog
 
-## 0.2.3-dev (2016-07-25)
+## 0.3.0-dev (2016-08-11)
+
+- major rewrite of command processing
+- now uses table_rex for formatting
+- cell info gives overview of a cell's keys/values
+
+## 0.2.3 (2016-07-25)
 
 - changed to Apache 2 License
 - version now coded in mix.exs
