@@ -1,42 +1,12 @@
 defmodule Nerves.Cell.CLI do
   @moduledoc """
-  A CLI for managing Nerves devices that implement the "Cell" protocol set.  For
-  more information see nerves_cell.
+  High level module that processes commands
 
-  Because not all cells implement all optional Cell features, not all functions
-  may be usable with all cells.
-
-  ## Configuration Example
-
-  Runtime configuration is possible by placing a file at `~/.cell/cell.conf`
-  with the following format:
-
-  ```bash
-  # Service Type for Cell tool to use in M-SEARCH
-  # Default: "urn:cellulose-io:serivce:cell:1"
-  cell.ssdp_st = "urn:mydomain-com:service:audio:1"
-
-  # Services Doc location relative to base path
-  # Default: "jrtp"
-  cell.services_path = "cell"
-  ```
-
-  ## Examples
-
-      $ cell list
-      1 cells found
-      NAME	SERIAL#		TYPE	VERSION - 1 cell(s)
-      .172	CP1-xxxxx	CP1	  1.1.1
-
-      $ cell list -c .168
-      0 cells found matching ".168"
-
-      $ cell push -c .168 -f _images/firmware.fw
-      Pushing '_images/firmwmare.fw' to ".168"
-      cell: /jrtp/sys/firmware/current -> ok
+  A command module is responsible for taking a context and acting on it, including
+  all interactive input/ouput to stdin, stdout, stderr.
   """
+
   alias Nerves.Cell.CLI.Cmd
-  require Logger
 
   @cell_tool_version Mix.Project.config[:version]
   @default_st "urn:nerves-project-org:service:cell:1"
@@ -66,9 +36,9 @@ defmodule Nerves.Cell.CLI do
     "list"    => {Cmd.List,   nil},
     "info"    => {Cmd.Info,   nil},
     "push"    => {Cmd.Push,   nil},  #NYI
-    "watch"   => {Cmd.Watch,  nil},
-    "shell"   => {Cmd.Watch,  nil},
-    "reboot"  => {Cmd.Reboot, nil}
+    "watch"   => {Cmd.Watch,  nil},  #TODO
+    "shell"   => {Cmd.Watch,  nil},  #TODO
+    "reboot"  => {Cmd.Reboot, nil}   #TODO
   }
 
   # definition of aliases to be used with OptionParser
@@ -124,11 +94,8 @@ defmodule Nerves.Cell.CLI do
   defp invoke_command(context) do
     cmd = context.cmd |> String.downcase
     case @cmd_map[cmd] do
-      {cmd_module, cmd_options} ->
-        cmd_module.run(context)
-      other ->
-        IO.puts "unknown command: \"#{cmd}\""
-        :erlang.halt(1)
+      {cmd_module, cmd_options} -> cmd_module.run(context)
+      other -> {:error, "unknown command: \"#{cmd}\""}
     end
   end
 
@@ -154,5 +121,4 @@ defmodule Nerves.Cell.CLI do
     IO.puts "unknown option: #{opt}"
     :erlang.halt(1)
   end
-
 end

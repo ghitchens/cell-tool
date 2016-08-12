@@ -14,6 +14,6 @@ defmodule Nerves.Cell.CLI.Cmd.List do
     context
     |> Finder.discover
     |> Render.table([:id, :host, :server])
+    |> IO.puts
   end
-
 end

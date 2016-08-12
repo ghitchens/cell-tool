@@ -1,28 +1,33 @@
-defmodule Nerves.CLI.Cell.Cmd.Push do
-  @moduledoc """
-  Pushes the specified firmware bundle to a cell.
-  """
+defmodule Nerves.Cell.CLI.Cmd.Push do
+  @moduledoc false
 
-  alias Nerves.CLI.Cell.Finder
+  alias Nerves.Cell.CLI.Render
+  alias Nerves.Cell.CLI.Finder
 
-  @doc "Takes paramater(s) from `Cmd.main` to perform action"
-  def run(wspec, cspec) do
+  def run(context) do
+    context
+    |> Finder.discover(single: true)
+    |> push_firmware
+  end
+
+  defp push_firmware(context) do
+    [cell|_] = context.cells
+    [firmware_path|_] = context.args
+    host = cell.host
+    target_path = cell[:location] || "/"
+    firmware_bits = File.read! firmware_path
     HTTPotion.start
-    ware = File.read! wspec
-    Finder.apply cspec, "Pushing ''#{wspec}' to", &(push_to_cell(&1, ware))
+    HTTPotion.put target_path, body: firmware_bits, 
+                               headers: ["Content-Type": "application/x-firmware"],
+                               timeout: 12000
+    |> handle_status
   end
 
-  defp push_to_cell(cell, ware) do
-    cell.location
-    |> Path.join("/sys/firmware/current")
-    |> HTTPotion.put(body: ware, headers: ["Content-Type": "application/x-firmware"], timeout: 120000)
-    |> verify_status()
-    |> response("cell: #{cell.location} -> ")
-    |> IO.write()
+  defp handle_status(%HTTPotion.Response{status_code: 201}) do
+    IO.puts "Firmware succesfully updated"
   end
-
-  defp verify_status(%HTTPotion.Response{status_code: 201}), do: "ok\n"
-  defp verify_status(%HTTPotion.Response{status_code: x}), do: "UPDATE FAILED (ERROR #{x})\n"
-
-  defp response(message, prefix), do: "#{prefix} #{message}"
+  defp return_status(%HTTPotion.Response{status_code: x}) do
+    IO.puts "Firmware Update Failed, HTTP #{x}"
+    :erlang.halt(1)
+  end
 end

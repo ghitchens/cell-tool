@@ -74,6 +74,36 @@ Options:
 
 ## Configuration
 
+  ## Configuration Example
+
+  Runtime configuration is possible by placing a file at `~/.cell/cell.conf`
+  with the following format:
+
+  ```bash
+  # Service Type for Cell tool to use in M-SEARCH
+  # Default: "urn:cellulose-io:serivce:cell:1"
+  cell.ssdp_st = "urn:mydomain-com:service:audio:1"
+
+  # Services Doc location relative to base path
+  # Default: "jrtp"
+  cell.services_path = "cell"
+  ```
+
+  ## Examples
+
+      $ cell list
+      1 cells found
+      NAME	SERIAL#		TYPE	VERSION - 1 cell(s)
+      .172	CP1-xxxxx	CP1	  1.1.1
+
+      $ cell list -c .168
+      0 cells found matching ".168"
+
+      $ cell push -c .168 -f _images/firmware.fw
+      Pushing '_images/firmwmare.fw' to ".168"
+      cell: /jrtp/sys/firmware/current -> ok
+
+
 Cell may be configured at runtime by placing a .conf file at `~/.cell/cell.conf`
 
 Currently only the SSDP Service Type may be specified in the `~/.cell/cell.conf`
@@ -90,10 +120,3 @@ By default Cell will conduct it's M-SEARCH requests with the Service Type:
     cell alias <cells> <alias>                Make an alias for one or more cells
     cell static <cell> <config>|clear         Set a static IP on a cell
 
-## Contributing
-
-We appreciate any contribution to Cellulose Projects, so check out our
-[CONTRIBUTING.md](CONTRIBUTING.md) guide for more information. We usually keep
-a list of features and bugs [in the issue tracker][issues]
-
-[issues]: https://github.com/cellulose/ethernet/issues

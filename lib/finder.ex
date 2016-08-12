@@ -7,50 +7,32 @@ defmodule Nerves.Cell.CLI.Finder do
   require Logger
 
   @doc """
-  Given a device specification `spec`, and a title, apply the function `func`
-  to each of the found devices.
-
-  TODO: Deprecate in favor of using discover/context pattern
-  """
-  def apply(spec, title, func) do
-    cells = discover(spec)
-    case Enum.count(cells) do
-      0 -> nil
-      n ->
-        IO.write "#{title} #{n} cell(s)\n"
-        for {usn, cell} <- cells do
-          func.(Dict.merge(cell, usn: usn))
-        end
-    end
-  end
-
-  @doc """
   Use SSDP to discover the devices with the search type in `context.st`,
   creating unique and useful IDs for each cell, returning an updated context
   containing all the appropriate cells.
+
+  Options:    
+  
+    single: true
   """
-  @spec discover(map) :: map
-  def discover(context) do
+  @spec discover(map, Keyword.T) :: map
+  def discover(context, options \\ []) do
     cells = 
       SSDPClient.discover(target: context.st)
       |> populate_ids
       |> Enum.filter(&(meets_filter_spec(&1, context.filters)))
-    Map.put context, :cells, cells
-  end
-
-  def discover_one(context) do
-    result = discover(context)
-    case Enum.count(result.cells) do
-      1 -> 
-        [cell] = result.cells
-        cell
-      0 -> 
+    count = Enum.count(cells)
+    cells = case {options[:single], count} do
+      {true, 1} -> cells
+      {nil, _} -> cells
+      {_, 0} ->
         IO.puts "No matching cells"
         :erlang.halt(1)
-      n -> 
+      {true, n} -> 
         IO.puts "Matched #{n} cells -- must match only one"
         :erlang.halt(1)
     end
+    Map.put context, :cells, cells
   end
 
   # choose ids for cells that are useful for humans based on data

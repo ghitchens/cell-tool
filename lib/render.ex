@@ -1,15 +1,12 @@
 defmodule Nerves.Cell.CLI.Render do
   @moduledoc """
-  Functions to render and format output of CLI commands
-
   Generally the `cell` CLI discovers and operates on lists of cells,
   which are structured as lists of maps, to preserve order.
 
   These searches and operations often need to display results
   in tabular format, with optional data in the table.
 
-   This module defines general helpers to format the output of
-  such comands.
+  This module defines general helpers to format the output of such comands.
   """
 
   alias TableRex.Table
@@ -21,16 +18,12 @@ defmodule Nerves.Cell.CLI.Render do
 
 
   @doc """
-  Writes tabulated output about cells
-
-  `cells` is a maps of maps (with cell_id as key),
+  Returns a table built from cells in context
 
   `column_specs` is a list of column specifications, each of which are
   either a either a simple atom, which defines a key name in the
   data to retrieve, or a {key, Keyword.t} tuple, where map defines
   attributes for that column.
-
-  Returns unmodified cells enumerable (for ease of pipelining)
   """
   @spec table(map, list, String.t | nil) :: String.t
   def table(context, column_specs \\ @default_fields, title \\ nil)
@@ -47,8 +40,6 @@ defmodule Nerves.Cell.CLI.Render do
     |> Enum.map(&(build_row(&1, column_specs)))
     |> Table.new(headers, title)
     |> Table.render!() #vertical_style: :off, header_separator_symbol: "-")
-    |> IO.write
-    context
   end
 
   # #Returns an appropriate table title
