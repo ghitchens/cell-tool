@@ -42,9 +42,14 @@ defmodule Nerves.Cell.CLI do
   @default_st "urn:nerves-project-org:service:cell:1"
   @config_file "~/.cell/cell.conf"
 
+  @service_type_map %{
+    "all" => "ssdp:all",
+    "nemo" => "urn:rosepointnav-com:service:nemo:1",
+    "cell" => "urn:nerves-project-org:service:cell:1"
+  }
+
   @default_context %{
-    cmd: "", args: [], opts: [],
-    st: @default_st
+    cmd: "", args: [], opts: [], st: @default_st
   }
 
   @cmd_aliases %{
@@ -55,11 +60,15 @@ defmodule Nerves.Cell.CLI do
   @cmd_map %{
     "help"    => {Cmd.Help,   nil},
     "list"    => {Cmd.List,   nil},
-    "push"    => {Cmd.Push,   nil},
     "info"    => {Cmd.Info,   nil},
+    "push"    => {Cmd.Push,   nil},  #NYI
     "watch"   => {Cmd.Watch,  nil},
+    "shell"   => {Cmd.Watch,  nil},
     "reboot"  => {Cmd.Reboot, nil}
   }
+
+  # definition of aliases to be used with OptionParser
+  defp aliases, do: [h: :help, v: :version, o: :options, t: :type]
 
   @doc false
   # Setup configuration, parse arguments, invoke command, and print results, theading
@@ -122,47 +131,24 @@ defmodule Nerves.Cell.CLI do
   # handle any global options, merging with default config, and possibly
   # invoking special commands (like -h)
   defp process_global_options(context) do
-    case context[:opts] do
-      [help: true] -> Map.merge(context, cmd: "help")
-      _ -> context
-    end
+    Enum.reduce context[:opts], context, &process_option/2
   end
 
-  #     #Provision
-  #     {[], ["provision", cells, app_id], []} -> Cmd.Provision.run(cells, app_id)
-  #     {args, ["provision", cells, app_id], []} -> Cmd.Provision.run(cells, app_id, argv_to_dict(args[:options]))
-
-  #     #Push
-  #
-  #     {[], ["inspect", cells], []} -> Cmd.Inspect.run(cells)
-  #     {[], ["inspect", cells, path], []} -> Cmd.Inspect.run(cells, path)
-  #     # IP
-  #     # {[cells: cells, ip: ip, mask: mask, router: router], ["static"], []} ->
-  #     #   Cmd.Ip.run(cells, ip, mask, router)
-  #     #Version
-  #     {[], ["version"], _} -> IO.write "cell v#{@cell_tool_version}"
-  #     {[version: true], _, _} -> IO.write "cell v#{@cell_tool_version}"
-  #     #Default
-  #     _ ->
-  #       IO.write "Invalid usage or malformed command\n\nUsage:\n\n"
-  #       Cmd.Help.run
-  #   end
-  # end
-  #
-
-  # definition of aliases to be used with OptionParser
-  defp aliases, do: [h: :help, v: :version, o: :options]
-
-  # captchrisd - utiltity for provision argument breakdown - REVIEW
-  defp argv_to_dict(args) do
-    args = String.split(args, ",")
-    {args, _} = Enum.flat_map_reduce(args, [], fn(x, acc) ->
-      case String.split(x, "=") do
-        [k, v] -> {["#{k}": v], acc}
-        _ -> {:halt, acc}
-      end
-    end)
-    args
+  defp process_option({:"ssdp-type", service_type}, context) do
+    case @service_type_map[service_type] do
+      nil ->
+        IO.puts "unknown service type: #{service_type}"
+        :erlang.halt(1)
+      st ->
+        %{context | st: st}
+    end
+  end
+  defp process_option({:help, true}, context) do
+    %{context | cmd: "help"}
+  end
+  defp process_option({opt, _arg}, context) do
+    IO.puts "unknown option: #{opt}"
+    :erlang.halt(1)
   end
 
 end

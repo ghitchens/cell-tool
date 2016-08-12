@@ -9,22 +9,13 @@ defmodule Nerves.Cell.CLI.Cmd.List do
   alias Nerves.CLI.Cell.Inet
   alias Nerves.CLI.Cell.Render
 
-  # HACK: this duplicates configuration elsewhere in order to choose format
-  # would be better to abstract out somehwere else.
-  @nerves_st "urn:nerves-project-org:service:cell:1"
-
   @doc false
   def run(context) do
-#    HTTPotion.start
     context
     |> Finder.discover
-#    |> Render.summary
-    |> Render.table([:host, :cellid, :server, :st])
+    |> Render.table([:cellid, :host, :server])
   end
 
-  defp format_status(service = %{st: @nerves_st}) do
-    format_basic_status(service, service[:cellid])
-  end
   defp format_status(service) do
     case service[:location] do
       nil ->
