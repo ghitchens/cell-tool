@@ -2,7 +2,6 @@ defmodule Nerves.Cell.CLI.Cmd.Info do
   @moduledoc false
 
   alias Nerves.Cell.CLI.Finder
-  alias Nerves.Cell.CLI.Render
 
   def run(context) do
     {cell_id, cell} = 

@@ -63,7 +63,7 @@ defmodule Nerves.Cell.CLI.Render do
   defp build_column({id, _attrs}, :id), do: to_string(id)
   defp build_column({_id, attrs}, a) when is_atom(a), do: to_string(attrs[a])
   defp build_column(cell, {k, type}) when is_atom(k) do
-    ColumnFormatters.column(type, cell[k])
+    Nerves.Cell.CLI.Render.ColumnFormatters.column(type, cell[k])
   end
 
   defmodule ColumnFormatters do

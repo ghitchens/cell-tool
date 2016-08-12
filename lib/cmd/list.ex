@@ -4,9 +4,7 @@ defmodule Nerves.Cell.CLI.Cmd.List do
   the last octet of their IP, serial number, device type and firmware version.
   """
 
-  alias Nerves.Cell.CLI.JRTP
   alias Nerves.Cell.CLI.Finder
-  alias Nerves.Cell.CLI.Inet
   alias Nerves.Cell.CLI.Render
 
   @doc false

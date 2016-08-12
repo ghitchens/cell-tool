@@ -54,17 +54,19 @@ defmodule Nerves.Cell.CLI.Finder do
     end
   end
   defp human_id_for(usn, _) do
-    if String.contains?(usn, "::") do
-        [uuid, _] = String.split(usn, "::")
+    uuid = if String.contains?(usn, "::") do
+        String.split(usn, "::")
+        |> List.first
     else
-        uuid = usn
+        usn
     end
     if String.contains?(uuid, ":") do
       [_, raw_uuid] = String.split(uuid, ":")
+      raw_uuid
     else
-      raw_uuid = uuid
+      uuid
     end
-    String.slice(raw_uuid, 0..7)
+    |> String.slice(0..7)
     |> String.downcase
   end
 

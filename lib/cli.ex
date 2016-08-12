@@ -94,8 +94,10 @@ defmodule Nerves.Cell.CLI do
   defp invoke_command(context) do
     cmd = context.cmd |> String.downcase
     case @cmd_map[cmd] do
-      {cmd_module, cmd_options} -> cmd_module.run(context)
-      other -> {:error, "unknown command: \"#{cmd}\""}
+      {cmd_module, _cmd_options} -> 
+        cmd_module.run(context)
+      _other -> 
+        {:error, "unknown command: \"#{cmd}\""}
     end
   end
 
@@ -117,7 +119,7 @@ defmodule Nerves.Cell.CLI do
   defp process_option({:help, true}, context) do
     %{context | cmd: "help"}
   end
-  defp process_option({opt, _arg}, context) do
+  defp process_option({opt, _arg}, _context) do
     IO.puts "unknown option: #{opt}"
     :erlang.halt(1)
   end

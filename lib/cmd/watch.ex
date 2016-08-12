@@ -10,7 +10,7 @@ defmodule Nerves.CLI.Cell.Cmd.Watch do
   @mcast_log_group {224, 0, 0, 224}
   @mcast_log_port 9999
 
-  alias Nerves.CLI.Cell.Inet
+  alias Nerves.Cell.CLI.Inet
 
   @doc "Starts the watch on all cells"
   def run do
