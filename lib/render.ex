@@ -10,6 +10,9 @@ defmodule Nerves.Cell.CLI.Render do
   """
 
   alias TableRex.Table
+  alias Nerves.Cell.CLI.Render.HeaderFormatters
+  alias Nerves.Cell.CLI.Render.ColumnFormatters
+
 
   @default_fields [:cell_id, :result]
 
@@ -27,16 +30,10 @@ defmodule Nerves.Cell.CLI.Render do
   """
   @spec table(map, list, String.t | nil) :: String.t
   def table(context, column_specs \\ @default_fields, title \\ nil)
-  def table([], _, _), do: []
-  def table(%{cells: []}=context, _, _) do
-    IO.puts "No matching cells"
-    context
-  end
-  def table(context, column_specs, title) do
-    headers =
-      column_specs
-      |> Nerves.Cell.CLI.Render.HeaderFormatters.headers
-    context.cells
+  def table(%{cells: []}=_context, _, _), do: "No matching cells"
+  def table(%{cells: cells}=_context, column_specs, title) do
+    headers = column_specs |> HeaderFormatters.headers
+    cells
     |> Enum.map(&(build_row(&1, column_specs)))
     |> Table.new(headers, title)
     |> Table.render!() #vertical_style: :off, header_separator_symbol: "-")
@@ -63,16 +60,13 @@ defmodule Nerves.Cell.CLI.Render do
   defp build_column({id, _attrs}, :id), do: to_string(id)
   defp build_column({_id, attrs}, a) when is_atom(a), do: to_string(attrs[a])
   defp build_column(cell, {k, type}) when is_atom(k) do
-    Nerves.Cell.CLI.Render.ColumnFormatters.column(type, cell[k])
+    ColumnFormatters.column(type, cell[k])
   end
 
   defmodule ColumnFormatters do
-
     @type column_type :: atom
     @type column_spec :: atom | {atom, column_type}
-
     @moduledoc false
-
     alias Nerves.Cell.CLI.Inet
     # fairly simple column formats (defined by an atom type)
     @spec column(column_type, term) :: String.t
@@ -84,19 +78,15 @@ defmodule Nerves.Cell.CLI.Render do
 
     @type column_type :: atom
     @type column_spec :: atom | {atom, column_type}
-
     @moduledoc false
-
     # convert a list of atoms
     @spec headers([column_spec]) :: [String.t]
     def headers(column_specs) do
       column_specs
       |> Enum.map(&header_from_spec/1)
     end
-
     # given a table format the header (for now)
     defp header_from_spec({k,_v}) when is_atom(k), do: to_string(k)
     defp header_from_spec(a) when is_atom(a), do: to_string(a)
   end
-
 end
