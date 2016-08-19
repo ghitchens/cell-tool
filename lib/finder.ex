@@ -11,15 +11,13 @@ defmodule Nerves.Cell.CLI.Finder do
   creating unique and useful IDs for each cell, returning an updated context
   containing all the appropriate cells.
 
-  Options:    
-  
-    single: true
+  Options: single: true
   """
   @spec discover(map, Keyword.T) :: map
   def discover(context, options \\ []) do
     cells = 
       SSDPClient.discover(target: context.st)
-      |> populate_ids
+      |> normalize_keys_and_ids
       |> Enum.filter(&(meets_filter_spec(&1, context.filters)))
     count = Enum.count(cells)
     cells = case {options[:single], count} do
@@ -28,32 +26,50 @@ defmodule Nerves.Cell.CLI.Finder do
       {_, 0} ->
         IO.puts "No matching cells"
         :erlang.halt(1)
-      {true, n} -> 
+      {true, n} ->
         IO.puts "Matched #{n} cells -- must match only one"
         :erlang.halt(1)
     end
     Map.put context, :cells, cells
   end
 
-  # choose ids for cells that are useful for humans based on data
-  @spec populate_ids([{String.t, map}]) :: [{String.t, map}]
-  defp populate_ids(cells) do
+  # remove x- from ssdp header keys, providing in downcase form, and
+  # move the usn from the key in the cell into the map itself, replacing
+  # the key with a true cell ID
+  @spec normalize_keys_and_ids([{String.t, map}]) :: [{String.t, map}]
+  defp normalize_keys_and_ids(cells) do
     Enum.map cells, fn({usn, cell}) ->
-      {human_id_for(usn, cell), Map.put(cell, :usn, usn)}
+      new_cell = 
+        cell
+        |> normalize_cell
+        |> Map.put(:usn, usn)
+      {id_for(usn, cell), new_cell}
     end
   end
 
-  # given a {usn, cell}  return something short and useful
-  @spec human_id_for(String.t, map) :: String.t
-  defp human_id_for(_, %{cellid: cellid}=_cell) do
-    if String.contains?(cellid, "-") do
-      [_, boardid] = String.split(cellid, "-")
-      boardid
-    else
-      cellid
+  @spec normalize_cell(map) :: map
+  defp normalize_cell(cell) do
+    cell
+    |> Enum.map(fn({k, v}) -> {normalize_key(k), v} end)
+    |> Enum.into(%{})
+  end
+
+  @spec normalize_key(atom) :: atom
+  defp normalize_key(atom_key) do
+    atom_key
+    |> to_string
+    |> String.downcase
+    |> String.split("-")
+    |> case do
+      ["x-", s] -> String.to_atom(s)
+      _ -> atom_key
     end
   end
-  defp human_id_for(usn, _) do
+
+  # given a {usn, cell}  return a useful unique ID for the cell
+  @spec id_for(String.t, map) :: String.t
+  defp id_for(_, %{id: id}=_cell), do: id
+  defp id_for(usn, _) do
     uuid = if String.contains?(usn, "::") do
         String.split(usn, "::")
         |> List.first
