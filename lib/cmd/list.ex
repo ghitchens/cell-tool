@@ -1,6 +1,6 @@
 defmodule Nerves.Cell.CLI.Cmd.List do
   @moduledoc """
-  Discovers cells on the Local network and displays key information such as
+  Discovers cells on the local network and displays key information such as
   the last octet of their IP, serial number, device type and firmware version.
   """
 
@@ -15,3 +15,4 @@ defmodule Nerves.Cell.CLI.Cmd.List do
     |> IO.puts
   end
 end
+

@@ -9,16 +9,14 @@ defmodule Nerves.Cell.CLI.Render do
   This module defines general helpers to format the output of such comands.
   """
 
+  alias Nerves.Cell.CLI.Render
   alias TableRex.Table
-  alias Nerves.Cell.CLI.Render.HeaderFormatters
-  alias Nerves.Cell.CLI.Render.ColumnFormatters
 
 
   @default_fields [:cell_id, :result]
 
   @type column_type :: atom
   @type column_spec :: atom | {atom, column_type}
-
 
   @doc """
   Returns a table built from cells in context
@@ -32,7 +30,7 @@ defmodule Nerves.Cell.CLI.Render do
   def table(context, column_specs \\ @default_fields, title \\ nil)
   def table(%{cells: []}=_context, _, _), do: "No matching cells"
   def table(%{cells: cells}=_context, column_specs, title) do
-    headers = column_specs |> HeaderFormatters.headers
+    headers = column_specs |> Render.HeaderFormatters.headers
     cells
     |> Enum.map(&(build_row(&1, column_specs)))
     |> Table.new(headers, title)
@@ -60,7 +58,7 @@ defmodule Nerves.Cell.CLI.Render do
   defp build_column({id, _attrs}, :id), do: to_string(id)
   defp build_column({_id, attrs}, a) when is_atom(a), do: to_string(attrs[a])
   defp build_column(cell, {k, type}) when is_atom(k) do
-    ColumnFormatters.column(type, cell[k])
+    Render.ColumnFormatters.column(type, cell[k])
   end
 
   defmodule ColumnFormatters do
@@ -75,7 +73,6 @@ defmodule Nerves.Cell.CLI.Render do
   end
 
   defmodule HeaderFormatters do
-
     @type column_type :: atom
     @type column_spec :: atom | {atom, column_type}
     @moduledoc false

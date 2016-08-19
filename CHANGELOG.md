@@ -5,6 +5,7 @@
 - major rewrite of command processing
 - now uses table_rex for formatting
 - cell info gives overview of a cell's keys/values
+- uses new nerves metadata format
 
 ## 0.2.3 (2016-07-25)
 
