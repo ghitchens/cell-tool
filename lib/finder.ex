@@ -17,14 +17,15 @@ defmodule Nerves.Cell.CLI.Finder do
   """
   @spec discover(map, Keyword.T) :: map
   def discover(context, options \\ []) do
+#    Logger.debug "Discovering target #{context.st} args {context.filters}"
     cells =
       SSDPClient.discover(target: context.st)
       |> normalize_keys_and_ids
-      |> Enum.filter(&(meets_filter_spec(&1, context.filters)))
+      |> Enum.filter(&(meets_filter_spec(&1, context)))
     count = Enum.count(cells)
     cells = case {options[:single], count} do
       {true, 1} -> cells
-      {_, _} -> cells
+      {nil, _} -> cells
       {_, 0} ->
         IO.puts "No matching cells"
         :erlang.halt(1)
@@ -88,14 +89,18 @@ defmodule Nerves.Cell.CLI.Finder do
     |> String.downcase
   end
 
-  # decide if a cell meets a filter spec.  "all" and nil both match all
-  # cells.  For now, only the last octet can be used otherwise
+  # decide if a cell meets a filter spec.
+  # For now, only the node is used to match
   defp meets_filter_spec(_, []), do: true
-  defp meets_filter_spec({key, info}, spec) do
-    case spec do
-      "all" -> true
+  defp meets_filter_spec({key, _cell}, context) do
+#    Logger.debug "filtering on #{inspect context.args} with key #{key}"
+    context.args
+    |> List.first
+    |> case do
       nil -> true
-      str -> (str == key)
+      ^key -> true
+      "all" -> true
+      _ -> false
     end
   end
 

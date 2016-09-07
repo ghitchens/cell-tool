@@ -19,10 +19,10 @@ defmodule Nerves.Cell.CLI do
   }
 
   @default_context %{
-    cmd: "", 
-    args: [], 
-    opts: [], 
-    filters: [], 
+    cmd: "",
+    args: [],
+    opts: [],
+    filters: [],
     st: @default_st
   }
 
@@ -42,7 +42,7 @@ defmodule Nerves.Cell.CLI do
   }
 
   # definition of aliases to be used with OptionParser
-  defp aliases, do: [h: :help, v: :version, o: :options, t: :type]
+  defp aliases, do: [h: :help, v: :version, o: :options, t: :stype]
 
   @doc false
   # Setup configuration, parse arguments, invoke command, and print results, theading
@@ -94,9 +94,9 @@ defmodule Nerves.Cell.CLI do
   defp invoke_command(context) do
     cmd = context.cmd |> String.downcase
     case @cmd_map[cmd] do
-      {cmd_module, _cmd_options} -> 
+      {cmd_module, _cmd_options} ->
         cmd_module.run(context)
-      _other -> 
+      _other ->
         {:error, "unknown command: \"#{cmd}\""}
     end
   end
@@ -107,7 +107,7 @@ defmodule Nerves.Cell.CLI do
     Enum.reduce context[:opts], context, &process_option/2
   end
 
-  defp process_option({:type, service_type}, context) do
+  defp process_option({:stype, service_type}, context) do
     case @service_type_map[service_type] do
       nil ->
         IO.puts "unknown service type: #{service_type}"
