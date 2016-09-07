@@ -42,7 +42,8 @@ defmodule Nerves.Cell.CLI do
   }
 
   # definition of aliases to be used with OptionParser
-  defp aliases, do: [h: :help, v: :version, o: :options, t: :stype]
+  defp aliases, do: [h: :help, v: :version, o: :options, 'S': :stype,
+                     f: :firmware ]
 
   @doc false
   # Setup configuration, parse arguments, invoke command, and print results, theading
@@ -118,6 +119,9 @@ defmodule Nerves.Cell.CLI do
   end
   defp process_option({:help, true}, context) do
     %{context | cmd: "help"}
+  end
+  defp process_option({:firmware, firmware}, context) do
+    Map.put context, :firmware, firmware
   end
   defp process_option({opt, _arg}, _context) do
     IO.puts "unknown option: #{opt}"

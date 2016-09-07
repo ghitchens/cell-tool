@@ -13,9 +13,12 @@ defmodule Nerves.Cell.CLI.Cmd.Push do
 
   defp push_firmware(context) do
     #Logger.info "Got here, context: #{inspect context}"
+    if (context[:firmware] == nil) do
+      IO.puts "Push requires --firmware to be specified"
+      :erlang.halt(1)
+    end
     [{_id,cell}|_] = context.cells
-    [firmware_path|_] = context.args
-    firmware_bits = File.read! firmware_path
+    firmware_bits = File.read! context.firmware
     HTTPotion.start
     HTTPotion.put(target_uri(cell), body: firmware_bits,
        headers: ["Content-Type": "application/x-firmware"],
@@ -30,8 +33,8 @@ defmodule Nerves.Cell.CLI.Cmd.Push do
         location
       <<"https:", _rest::binary>> ->
         location
-      <<"/_cell/", _rest::binary>> ->
-        "http://#{cell.host}:8988/"
+      <<"/_cell/", _rest::binary>> ->  # broken legacy crap
+        "http://#{cell.host}:8988/firmware"
       other ->
         IO.puts "Cell gives no valid location for firmware service (got #{other})"
         :erlang.halt(1)
