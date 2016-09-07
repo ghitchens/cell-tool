@@ -18,11 +18,14 @@ defmodule Nerves.Cell.CLI.Cmd.Push do
       :erlang.halt(1)
     end
     [{_id,cell}|_] = context.cells
-    firmware_bits = File.read! context.firmware
+    bits = File.read! context.firmware
+    uri = target_uri(cell)
+    #Logger.debug "Pushing #{:erlang.size(bits)} bytes from #{context.firmware} to #{uri}"
     HTTPotion.start
-    HTTPotion.put(target_uri(cell), body: firmware_bits,
-       headers: ["Content-Type": "application/x-firmware"],
-       timeout: 12000)
+    HTTPotion.put(uri,
+       body: bits,
+       headers: ["Content-Type": "application/x-firmware","X-Reboot": "true"],
+       timeout: 30000)
     |> handle_status
   end
 
@@ -47,6 +50,9 @@ defmodule Nerves.Cell.CLI.Cmd.Push do
   defp handle_status(%HTTPotion.Response{status_code: x}) do
     IO.puts "Push firmware failed: HTTP #{x}"
     :erlang.halt(1)
+  end
+  defp handle_status(%HTTPotion.ErrorResponse{message: "connection_closed"}) do #HACK REVIEW this should be handled by graceful exit instead
+    IO.puts "Firmware pushed, connection closed (device likely rebooting)"
   end
   defp handle_status(%HTTPotion.ErrorResponse{message: error_message}) do
     IO.puts "Push firmware failed: #{error_message}"

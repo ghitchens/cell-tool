@@ -1,20 +1,14 @@
-## TODO
+# TODO
 
-- serial numbers / board ID cleanup
-- X-cell-type (eg shack, cr1a, ng1a, etc)
-- X-cell-group (eg shack, cr1a, ng1a, etc)
-- X-firmware-version
-- X-firmware-id
+## Status
 
-- cell push
-- cell reboot
+x cell push
+x cell reboot
 - cell shell
 x cell watch
 - cell help <cmd>
 
-# Soon
+## Soon
 
-- deprecate Finder.Apply entirely
+x deprecate Finder.Apply entirely
 - pub/priv key/certificates for push, reboot, shell validation
-
-## Architectural Issues
