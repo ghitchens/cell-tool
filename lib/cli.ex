@@ -26,10 +26,6 @@ defmodule Nerves.Cell.CLI do
     st: @default_st
   }
 
-  @cmd_aliases %{
-    ""=>"help"
-  }
-
   # mapping of commands to modules that handle them
   @cmd_map %{
     "help"    => {Cmd.Help,   nil},
@@ -78,6 +74,8 @@ defmodule Nerves.Cell.CLI do
   @spec parse_args(map, list) :: map
   defp parse_args(context, args) do
     case OptionParser.parse(args, [aliases: aliases]) do
+      {[], [], []} -> # nothing given
+        %{context | cmd: "help", args: [], opts: []}
       {opts, [cmd|args], []} -> # cmd given, optionally with args/opts
         %{context | cmd: cmd, args: args, opts: opts}
       {opts, [], []} -> # only options given
