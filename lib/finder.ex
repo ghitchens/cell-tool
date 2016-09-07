@@ -57,16 +57,19 @@ defmodule Nerves.Cell.CLI.Finder do
     |> Enum.into(%{})
   end
 
+  # remove x- from front of keys, and convert them to lowercase atoms
   @spec normalize_key(atom) :: atom
   defp normalize_key(atom_key) do
     atom_key
     |> to_string
     |> String.downcase
-    |> String.split("-")
     |> case do
-      ["x-", s] -> String.to_atom(s)
-      _ -> atom_key
+      <<"x-", s::binary>> ->
+        s
+      other ->
+        other
     end
+    |> String.to_atom
   end
 
   # given a {usn, cell}  return a useful unique ID for the cell
