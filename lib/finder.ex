@@ -11,18 +11,20 @@ defmodule Nerves.Cell.CLI.Finder do
   creating unique and useful IDs for each cell, returning an updated context
   containing all the appropriate cells.
 
-  Options: single: true
+  Options:
+
+    single: true
   """
   @spec discover(map, Keyword.T) :: map
   def discover(context, options \\ []) do
-    cells = 
+    cells =
       SSDPClient.discover(target: context.st)
       |> normalize_keys_and_ids
       |> Enum.filter(&(meets_filter_spec(&1, context.filters)))
     count = Enum.count(cells)
     cells = case {options[:single], count} do
       {true, 1} -> cells
-      {nil, _} -> cells
+      {_, _} -> cells
       {_, 0} ->
         IO.puts "No matching cells"
         :erlang.halt(1)
@@ -39,7 +41,7 @@ defmodule Nerves.Cell.CLI.Finder do
   @spec normalize_keys_and_ids([{String.t, map}]) :: [{String.t, map}]
   defp normalize_keys_and_ids(cells) do
     Enum.map cells, fn({usn, cell}) ->
-      new_cell = 
+      new_cell =
         cell
         |> normalize_cell
         |> Map.put(:usn, usn)
@@ -89,12 +91,11 @@ defmodule Nerves.Cell.CLI.Finder do
   # decide if a cell meets a filter spec.  "all" and nil both match all
   # cells.  For now, only the last octet can be used otherwise
   defp meets_filter_spec(_, []), do: true
-  defp meets_filter_spec(cell, spec) do
-    {_key, info} = cell
+  defp meets_filter_spec({key, info}, spec) do
     case spec do
       "all" -> true
       nil -> true
-      str -> (str == info.name)
+      str -> (str == key)
     end
   end
 
