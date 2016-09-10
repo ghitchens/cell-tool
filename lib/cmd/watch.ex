@@ -11,17 +11,43 @@ defmodule Nerves.Cell.CLI.Cmd.Watch do
   @mcast_log_port 9999
 
   alias Nerves.Cell.CLI.Inet
+  alias Nerves.Cell.CLI.Finder
 
-  @doc "Starts the watch on a single cell"
-  def run(%{cells: [cell]}=_context) do
-    IO.puts "Watching log from device on #{cell.host}"
-    {:ok, socket} = setup_socket
-    watch_mcast(socket, %{ip: cell.host})
+  def run(context) do
+    context
+    |> Finder.discover
+    |> watch_devices
   end
-  def run(_context) do  # watch on more than one, or all
-    IO.puts "Watching log from all cells on LAN"
+
+  defp watch_devices(context) do
     {:ok, socket} = setup_socket
-    watch_mcast(socket)
+    count = Enum.count(context.cells)
+    IO.puts "Found #{count} cells"
+    all = (context.args == [])
+    if ((not all) and count == 0) do
+      IO.puts "(omit filter to watch all LAN activity)"
+      :erlang.halt(1)
+    end
+    context.cells
+    |> Enum.map(fn({id, cell}) -> {cell[:ip], id} end)
+    |> Enum.into(%{})
+    |> watch_ips(socket, all)
+  end
+
+  # given a map of ip addresses to cell id's display logs
+  defp watch_ips(ips_map, socket, all) do
+    receive do
+      {:udp, _rcv_socket, source_ip, _port, msg} ->
+        case {ips_map[source_ip], all} do
+          {nil, true} ->
+            IO.write "#{inspect source_ip}\t#{msg}"
+          {nil, _} ->
+            nil
+          {id, _} ->
+            IO.write "#{id}\t#{msg}"
+        end
+        watch_ips(ips_map, socket, all)
+    end
   end
 
   defp setup_socket do
@@ -32,18 +58,4 @@ defmodule Nerves.Cell.CLI.Cmd.Watch do
     {:ok, socket}
   end
 
-  defp watch_mcast(socket, opts \\ %{}) do
-    # clean up IP address
-    ip = if opts[:ip] do
-      [_, ip] = String.split(opts[:ip], ".")
-      String.to_integer(ip)
-    end
-    receive do
-      {:udp, _rcv_socket, {_,_,_,n}, _port, msg} ->
-        if ip == nil or n == ip do
-          IO.write ".#{n}\t#{msg}"
-          watch_mcast(socket, opts)
-        end
-    end
-  end
 end
