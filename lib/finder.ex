@@ -17,11 +17,12 @@ defmodule Nerves.Cell.CLI.Finder do
   """
   @spec discover(map, Keyword.T) :: map
   def discover(context, options \\ []) do
-#    Logger.debug "Discovering target #{context.st} args {context.filters}"
+    # Logger.debug "Discovering target #{context.st} args {context.filters}"
     cells =
       SSDPClient.discover(target: context.st)
-      |> normalize_keys_and_ids
+      |> services_to_cells
       |> Enum.filter(&(meets_filter_spec(&1, context)))
+    Enum.each(cells, &(Logger.debug(inspect &1)))
     count = Enum.count(cells)
     cells = case {options[:single], count} do
       {true, 1} -> cells
@@ -36,23 +37,21 @@ defmodule Nerves.Cell.CLI.Finder do
     Map.put context, :cells, cells
   end
 
-  # remove x- from ssdp header keys, providing in downcase form, and
-  # move the usn from the key in the cell into the map itself, replacing
-  # the key with a true cell ID
-  @spec normalize_keys_and_ids([{String.t, map}]) :: [{String.t, map}]
-  defp normalize_keys_and_ids(cells) do
-    Enum.map cells, fn({usn, cell}) ->
-      new_cell =
-        cell
-        |> normalize_cell
-        |> Map.put(:usn, usn)
-      {id_for(usn, cell), new_cell}
-    end
+  # Change from list of services to list of cells
+  # Remove usn from services alltogether (so cells with common usn can be
+  # coalesced), genrating a cell_id for each, then dedup the cells, building a
+  # list of cells
+  @spec services_to_cells([{String.t, map}]) :: [{String.t, map}]
+  defp services_to_cells(services) do
+    services
+    |> Enum.map(&({id_for(&1), cell_from(&1)}))
+    |> Enum.chunk_by(fn({k,_v})->k end)
+    |> Enum.map(&(List.first(&1)))  # return only the first
   end
 
-  @spec normalize_cell(map) :: map
-  defp normalize_cell(cell) do
-    cell
+  @spec cell_from({String.t, map}) :: map
+  defp cell_from({_usn, service}) do
+    service
     |> Enum.map(fn({k, v}) -> {normalize_key(k), v} end)
     |> Enum.into(%{})
   end
@@ -64,18 +63,16 @@ defmodule Nerves.Cell.CLI.Finder do
     |> to_string
     |> String.downcase
     |> case do
-      <<"x-", s::binary>> ->
-        s
-      other ->
-        other
+      <<"x-", s::binary>> -> s
+      other -> other
     end
     |> String.to_atom
   end
 
   # given a {usn, cell}  return a useful unique ID for the cell
-  @spec id_for(String.t, map) :: String.t
-  defp id_for(_, %{id: id}=_cell), do: id
-  defp id_for(usn, _) do
+  @spec id_for({String.t, map}) :: String.t
+  defp id_for({_, %{id: id}=_cell}), do: id
+  defp id_for({usn, _}) do
     uuid = if String.contains?(usn, "::") do
         String.split(usn, "::")
         |> List.first
@@ -83,8 +80,9 @@ defmodule Nerves.Cell.CLI.Finder do
         usn
     end
     if String.contains?(uuid, ":") do
-      [_, raw_uuid] = String.split(uuid, ":")
-      raw_uuid
+      uuid
+      |> String.split(":")
+      |> List.last
     else
       uuid
     end
