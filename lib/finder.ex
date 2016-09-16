@@ -17,12 +17,10 @@ defmodule Nerves.Cell.CLI.Finder do
   """
   @spec discover(map, Keyword.T) :: map
   def discover(context, options \\ []) do
-    # Logger.debug "Discovering target #{context.st} args {context.filters}"
     cells =
       SSDPClient.discover(target: context.st)
       |> services_to_cells
       |> Enum.filter(&(meets_filter_spec(&1, context)))
-    Enum.each(cells, &(Logger.debug(inspect &1)))
     count = Enum.count(cells)
     cells = case {options[:single], count} do
       {true, 1} -> cells
@@ -94,7 +92,6 @@ defmodule Nerves.Cell.CLI.Finder do
   # For now, only the node is used to match
   defp meets_filter_spec(_, []), do: true
   defp meets_filter_spec({key, _cell}, context) do
-#    Logger.debug "filtering on #{inspect context.args} with key #{key}"
     context.args
     |> List.first
     |> case do
