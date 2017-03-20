@@ -7,16 +7,15 @@ A **cell** is a Nerves device that supports a set of well known protocols for Di
 
 ## Installation
 
-The `mix.exs` script installs the executable as as `/usr/local/bin/cell`.
-
-If your user has write access to `/usr/local/bin`, you can simply:
+Build and install using the normal `mix` `escript` commands:
 
 ```bash
 $ mix escript.build
+$ mix escript.install
 ```
 
-If this gives you permissions error, either grant yourself, group or user
-write permission access to `/usr/local/bin`, or use sudo before the above command.
+The installation directory is `~/.mix/escripts`. You may want to add this to
+your path for convenience.
 
 ## Usage
 
