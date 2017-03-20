@@ -73,7 +73,7 @@ defmodule Nerves.Cell.CLI do
   # parse options from args
   @spec parse_args(map, list) :: map
   defp parse_args(context, args) do
-    case OptionParser.parse(args, [aliases: aliases]) do
+    case OptionParser.parse(args, [aliases: aliases()]) do
       {[], [], []} -> # nothing given
         %{context | cmd: "help", args: [], opts: []}
       {opts, [cmd|args], []} -> # cmd given, optionally with args/opts

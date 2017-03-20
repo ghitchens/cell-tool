@@ -21,7 +21,7 @@ defmodule Nerves.Cell.CLI.Cmd.Watch do
   end
 
   defp watch_devices(context) do
-    {:ok, socket} = setup_socket
+    {:ok, socket} = setup_socket()
     count = Enum.count(context.cells)
     all = (context.args == [])
     cond do
