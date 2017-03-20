@@ -12,9 +12,9 @@ defmodule Nerves.Cell.CLI.Mixfile do
                path: "/usr/local/bin/cell"],
      version: @version,
      elixir: "~> 1.0",
-     deps: deps,
+     deps: deps(),
      # Hex
-     package: package,
+     package: package(),
      # ExDoc
      name: "Cell",
      docs: [main: Nerves.Cell.CLI,
